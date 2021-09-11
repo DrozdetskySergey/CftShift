@@ -8,8 +8,8 @@ public class mergeFilesSorting {
     public static void main(String[] args) {
         //TODO read args
 
-        boolean isAscend = false;
-        boolean isNumbers = false;
+        boolean isAscend = true;
+        boolean isInteger = true;
 
         String outputFileName = "out.txt";
 
@@ -17,17 +17,6 @@ public class mergeFilesSorting {
         inputFilesNames.add("in1.txt");
         inputFilesNames.add("in2.txt");
         inputFilesNames.add("in3.txt");
-
-        Comparator<String> stringComparator;
-        Comparator<Integer> integerComparator;
-
-        if (isAscend) {
-            stringComparator = Comparator.naturalOrder();
-            integerComparator = Comparator.naturalOrder();
-        } else {
-            stringComparator = Comparator.reverseOrder();
-            integerComparator = Comparator.reverseOrder();
-        }
 
         List<BufferedReader> readers = new ArrayList<>();
 
@@ -38,16 +27,24 @@ public class mergeFilesSorting {
 
             List<BufferedReader> noEmptyReaders = new ArrayList<>(readers);
 
-            if (isNumbers) {
-                mergeSort(writer, noEmptyReaders, integerComparator, true);
+            if (isAscend) {
+                if (isInteger) {
+                    mergeSort(writer, noEmptyReaders, Comparator.comparing(o -> ((Integer) o)), true);
+                } else {
+                    mergeSort(writer, noEmptyReaders, Comparator.comparing(o -> ((String) o)), false);
+                }
             } else {
-                mergeSort(writer, noEmptyReaders, stringComparator, false);
+                if (isInteger) {
+                    mergeSort(writer, noEmptyReaders, (o1, o2) -> ((Integer) o2).compareTo((Integer) o1), true);
+                } else {
+                    mergeSort(writer, noEmptyReaders, (o1, o2) -> ((String) o2).compareTo((String) o1), false);
+                }
             }
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Problem with input or output file!");
         } finally {
             try {
                 for (BufferedReader reader : readers) {
@@ -60,8 +57,8 @@ public class mergeFilesSorting {
         }
     }
 
-    private static <T> void mergeSort(BufferedWriter writer, List<BufferedReader> readers, Comparator<T> comparator, boolean isNumber) {
-        List<T> elements = new ArrayList<>();
+    private static void mergeSort(BufferedWriter writer, List<BufferedReader> readers, Comparator<Object> comparator, boolean isInteger) {
+        List<Object> elements = new ArrayList<>();
         int readersCount = readers.size();
         boolean isHasNull = false;
 
@@ -69,14 +66,14 @@ public class mergeFilesSorting {
             try {
                 String nextLine = r.readLine();
 
-                if (isNumber && nextLine != null) {
-                    elements.add((T) Integer.valueOf(nextLine));
-                } else {
-                    elements.add((T) nextLine);
-                }
-
                 if (nextLine == null) {
                     isHasNull = true;
+                }
+
+                if (isInteger && nextLine != null) {
+                    elements.add(Integer.valueOf(nextLine));
+                } else {
+                    elements.add(nextLine);
                 }
             } catch (Exception e) {
                 elements.add(null);
@@ -112,26 +109,26 @@ public class mergeFilesSorting {
                 }
             }
 
-            T writableElement = elements.get(writableElementIndex);
+            Object writableElement = elements.get(writableElementIndex);
 
             try {
                 writer.write(String.format("%s%n", writableElement));
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Problem with output file!");
                 return;
             }
 
-            T nextReadableElement;
+            Object nextReadableElement;
 
             try {
                 String nextLine = readers.get(writableElementIndex).readLine();
 
-                if (isNumber && nextLine != null) {
-                    nextReadableElement = (T) Integer.valueOf(nextLine);
+                if (isInteger && nextLine != null) {
+                    nextReadableElement = Integer.valueOf(nextLine);
                 } else {
-                    nextReadableElement = (T) nextLine;
+                    nextReadableElement = nextLine;
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 nextReadableElement = null;
             }
 
