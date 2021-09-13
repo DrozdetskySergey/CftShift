@@ -1,15 +1,16 @@
 package ru.cft.drozdrtskiy21.merge_files_sorting;
 
+import com.sun.jdi.InvalidTypeException;
+
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class mergeFilesSorting {
     public static void main(String[] args) {
         //TODO read args
 
         boolean isAscend = true;
-        boolean isInteger = true;
+        ElementType type = ElementType.INTEGER;
 
         String outputFileName = "out.txt";
 
@@ -25,26 +26,14 @@ public class mergeFilesSorting {
                 readers.add(new BufferedReader(new FileReader(s)));
             }
 
-            List<BufferedReader> noEmptyReaders = new ArrayList<>(readers);
-
-            if (isAscend) {
-                if (isInteger) {
-                    mergeSort(writer, noEmptyReaders, Comparator.comparing(o -> ((Integer) o)), true);
-                } else {
-                    mergeSort(writer, noEmptyReaders, Comparator.comparing(o -> ((String) o)), false);
-                }
-            } else {
-                if (isInteger) {
-                    mergeSort(writer, noEmptyReaders, (o1, o2) -> ((Integer) o2).compareTo((Integer) o1), true);
-                } else {
-                    mergeSort(writer, noEmptyReaders, (o1, o2) -> ((String) o2).compareTo((String) o1), false);
-                }
-            }
+            mergeSort(writer, new ElementReader(new ArrayList<>(readers), type), getComparator(isAscend, type));
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         } catch (IOException e) {
             System.out.println("Problem with input or output file!");
+        } catch (InvalidTypeException e) {
+            System.out.println("Unknown type of elements!");
         } finally {
             try {
                 for (BufferedReader reader : readers) {
@@ -57,87 +46,66 @@ public class mergeFilesSorting {
         }
     }
 
-    private static void mergeSort(BufferedWriter writer, List<BufferedReader> readers, Comparator<Object> comparator, boolean isInteger) {
-        List<Object> elements = new ArrayList<>();
-        int readersCount = readers.size();
-        boolean isHasNull = false;
+    private static void mergeSort(BufferedWriter writer, ElementReader elements, Comparator<Object> comparator) throws InvalidTypeException {
+        int inputFilesCount = elements.getSize();
 
-        for (BufferedReader r : readers) {
-            try {
-                String nextLine = r.readLine();
-
-                if (nextLine == null) {
-                    isHasNull = true;
-                }
-
-                if (isInteger && nextLine != null) {
-                    elements.add(Integer.valueOf(nextLine));
-                } else {
-                    elements.add(nextLine);
-                }
-            } catch (Exception e) {
-                elements.add(null);
-                isHasNull = true;
-            }
-        }
-
-        if (isHasNull) {
-            for (int i = 0; i < readersCount; i++) {
-                if (elements.get(i) == null) {
-                    readers.set(i, null);
-                }
-            }
-        }
-
-        while (readersCount > 0) {
-            if (isHasNull) {
-                elements = elements.stream().filter(Objects::nonNull).collect(Collectors.toList());
-                readers = readers.stream().filter(Objects::nonNull).collect(Collectors.toList());
-
-                readersCount = readers.size();
-                isHasNull = false;
-
-                continue;
-            }
-
-
+        while (inputFilesCount > 0) {
             int writableElementIndex = 0;
 
-            for (int i = 1; i < readersCount; i++) {
-                if (comparator.compare(elements.get(writableElementIndex), elements.get(i)) > 0) {
+            for (int i = 1; i < inputFilesCount; i++) {
+                if (comparator.compare(elements.getElement(writableElementIndex), elements.getElement(i)) > 0) {
                     writableElementIndex = i;
                 }
             }
 
-            Object writableElement = elements.get(writableElementIndex);
+            Object writableElement = elements.getElement(writableElementIndex);
 
             try {
                 writer.write(String.format("%s%n", writableElement));
             } catch (IOException e) {
                 System.out.println("Problem with output file!");
+
                 return;
             }
 
-            Object nextReadableElement;
+            boolean hasNextElementForIndex = elements.isUpdatedElement(writableElementIndex);
 
-            try {
-                String nextLine = readers.get(writableElementIndex).readLine();
-
-                if (isInteger && nextLine != null) {
-                    nextReadableElement = Integer.valueOf(nextLine);
-                } else {
-                    nextReadableElement = nextLine;
-                }
-            } catch (Exception e) {
-                nextReadableElement = null;
-            }
-
-            if (nextReadableElement == null || comparator.compare(writableElement, nextReadableElement) > 0) {
-                readers.set(writableElementIndex, null);
-                elements.set(writableElementIndex, null);
-                isHasNull = true;
+            if (!hasNextElementForIndex) {
+                inputFilesCount = elements.getSize();
             } else {
-                elements.set(writableElementIndex, nextReadableElement);
+                while (comparator.compare(writableElement, elements.getElement(writableElementIndex)) > 0) {
+                    hasNextElementForIndex = elements.isUpdatedElement(writableElementIndex);
+
+                    if (!hasNextElementForIndex) {
+                        inputFilesCount = elements.getSize();
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static Comparator<Object> getComparator(boolean isAscend, ElementType type) throws InvalidTypeException {
+        if (isAscend) {
+            switch (type) {
+                case INTEGER -> {
+                    return Comparator.comparing(o -> ((Integer) o));
+                }
+                case STRING -> {
+                    return Comparator.comparing(o -> ((String) o));
+                }
+                default -> throw new InvalidTypeException();
+            }
+        } else {
+            switch (type) {
+                case INTEGER -> {
+                    return (o1, o2) -> ((Integer) o2).compareTo((Integer) o1);
+                }
+                case STRING -> {
+                    return (o1, o2) -> ((String) o2).compareTo((String) o1);
+                }
+                default -> throw new InvalidTypeException();
             }
         }
     }
