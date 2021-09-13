@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ElementReader {
     private final List<BufferedReader> readers = new ArrayList<>();
@@ -15,26 +16,37 @@ public class ElementReader {
 
     public ElementReader(List<BufferedReader> readers, ElementType type) throws InvalidTypeException {
         for (BufferedReader r : readers) {
-            String nextLine = null;
+            String nextLine;
 
-            try {
-                nextLine = r.readLine();
-            } catch (IOException ignored) {
-            }
-
-            if (nextLine != null) {
+            do {
                 try {
-                    switch (type) {
-                        case INTEGER -> elements.add(Integer.valueOf(nextLine));
-                        case STRING -> elements.add(nextLine);
-                        default -> throw new InvalidTypeException();
-                    }
-
-                    this.readers.add(r);
-                    size++;
-                } catch (NumberFormatException ignored) {
+                    nextLine = r.readLine();
+                } catch (IOException e) {
+                    nextLine = null;
                 }
-            }
+
+                if (nextLine != null) {
+                    try {
+                        switch (type) {
+                            case INTEGER -> elements.add(Integer.valueOf(nextLine));
+                            case STRING -> {
+                                if (Pattern.compile("\\s").matcher(nextLine).find()) {
+                                    throw new StringFormatException();
+                                }
+
+                                elements.add(nextLine);
+                            }
+                            default -> throw new InvalidTypeException();
+                        }
+
+                        this.readers.add(r); // first line is good (BufferedReader r)
+                        size++;
+                        break; // break do {...} while () -> go next BufferedReader
+                    } catch (NumberFormatException | StringFormatException ignored) {
+                    }
+                }
+
+            } while (nextLine != null); // bad format of first line (BufferedReader r) -> try read next
         }
 
         this.type = type;
@@ -59,24 +71,33 @@ public class ElementReader {
 
         String nextLine;
 
-        try {
-            nextLine = readers.get(index).readLine();
-        } catch (IOException e) {
-            nextLine = null;
-        }
-
-        if (nextLine != null) {
+        do {
             try {
-                switch (type) {
-                    case INTEGER -> elements.set(index, Integer.valueOf(nextLine));
-                    case STRING -> elements.set(index, nextLine);
-                    default -> throw new InvalidTypeException();
-                }
-
-                return true;
-            } catch (NumberFormatException ignored) {
+                nextLine = readers.get(index).readLine();
+            } catch (IOException e) {
+                nextLine = null;
             }
-        }
+
+            if (nextLine != null) {
+                try {
+                    switch (type) {
+                        case INTEGER -> elements.set(index, Integer.valueOf(nextLine));
+                        case STRING -> {
+                            if (Pattern.compile("\\s").matcher(nextLine).find()) {
+                                throw new StringFormatException();
+                            }
+
+                            elements.set(index, nextLine);
+                        }
+                        default -> throw new InvalidTypeException();
+                    }
+
+                    return true; // next line is good -> exit
+                } catch (NumberFormatException | StringFormatException ignored) {
+                }
+            }
+
+        } while (nextLine != null); // bad format of next line (readers[index]) -> try read next
 
         elements.remove(index);
         readers.remove(index);
