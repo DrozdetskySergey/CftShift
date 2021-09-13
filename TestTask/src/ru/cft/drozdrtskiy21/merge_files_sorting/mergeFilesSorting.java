@@ -9,8 +9,8 @@ public class mergeFilesSorting {
     public static void main(String[] args) {
         //TODO read args
 
-        boolean isAscend = true;
-        ElementType type = ElementType.INTEGER;
+        boolean isAscend = false;
+        ElementType type = ElementType.STRING;
 
         String outputFileName = "out.txt";
 
@@ -22,12 +22,20 @@ public class mergeFilesSorting {
         List<BufferedReader> readers = new ArrayList<>();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
+            if (type != ElementType.INTEGER && type != ElementType.STRING) {
+                throw new InvalidTypeException();
+            }
+
             for (String s : inputFilesNames) {
                 readers.add(new BufferedReader(new FileReader(s)));
             }
 
-            mergeSort(writer, new ElementReader(new ArrayList<>(readers), type), getComparator(isAscend, type));
+            ElementsStreamFromReaders elements = new ElementsFromReaders(new ArrayList<>(readers), type);
+            Comparator<Object> comparator = getComparator(isAscend, type);
 
+            MergeSort.sort(writer, elements, comparator);
+
+            writer.flush();
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         } catch (IOException e) {
@@ -42,46 +50,6 @@ public class mergeFilesSorting {
                     }
                 }
             } catch (IOException ignored) {
-            }
-        }
-    }
-
-    private static void mergeSort(BufferedWriter writer, ElementReader elements, Comparator<Object> comparator) throws InvalidTypeException {
-        int inputFilesCount = elements.getSize();
-
-        while (inputFilesCount > 0) {
-            int writableElementIndex = 0;
-
-            for (int i = 1; i < inputFilesCount; i++) {
-                if (comparator.compare(elements.getElement(writableElementIndex), elements.getElement(i)) > 0) {
-                    writableElementIndex = i;
-                }
-            }
-
-            Object writableElement = elements.getElement(writableElementIndex);
-
-            try {
-                writer.write(String.format("%s%n", writableElement));
-            } catch (IOException e) {
-                System.out.println("Problem with output file!");
-
-                return;
-            }
-
-            boolean hasNextElementForIndex = elements.isUpdatedElement(writableElementIndex);
-
-            if (!hasNextElementForIndex) {
-                inputFilesCount = elements.getSize();
-            } else {
-                while (comparator.compare(writableElement, elements.getElement(writableElementIndex)) > 0) {
-                    hasNextElementForIndex = elements.isUpdatedElement(writableElementIndex);
-
-                    if (!hasNextElementForIndex) {
-                        inputFilesCount = elements.getSize();
-
-                        break;
-                    }
-                }
             }
         }
     }
