@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ElementsFromReaders implements ElementsStreamFromReaders {
+public class ElementsFromReaders implements ElementsGetterFromReaders {
     private final List<BufferedReader> readers = new ArrayList<>();
     private final List<Object> elements = new ArrayList<>();
     private int readersCount;
@@ -34,16 +34,18 @@ public class ElementsFromReaders implements ElementsStreamFromReaders {
 
                                 elements.add(nextLine);
                             }
+                            default -> throw new UnknownElementTypeException("Unknown element type!");
                         }
 
-                        this.readers.add(r); // first line is good (BufferedReader r)
+                        this.readers.add(r); // first line is good -> BufferedReader is relevant
                         readersCount++;
-                        break; // break do {...} while () -> go next BufferedReader
+
+                        break; // -> go next BufferedReader
                     } catch (NumberFormatException | StringFormatException ignored) {
                     }
                 }
 
-            } while (nextLine != null); // bad format of first line (BufferedReader r) -> try read next
+            } while (nextLine != null); // bad format of first line (BufferedReader r) -> try read next line
         }
 
         this.type = type;
@@ -89,6 +91,7 @@ public class ElementsFromReaders implements ElementsStreamFromReaders {
 
                             elements.set(readerIndex, nextLine);
                         }
+                        default -> throw new UnknownElementTypeException("Unknown element type!");
                     }
 
                     return true; // next line is good -> exit
@@ -96,7 +99,7 @@ public class ElementsFromReaders implements ElementsStreamFromReaders {
                 }
             }
 
-        } while (nextLine != null); // bad format of next line (readers[index]) -> try read next
+        } while (nextLine != null); // bad format of line (readers[index]) -> try read next line
 
         elements.remove(readerIndex);
         readers.remove(readerIndex);

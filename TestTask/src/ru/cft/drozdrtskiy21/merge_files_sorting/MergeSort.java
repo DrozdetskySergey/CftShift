@@ -5,7 +5,7 @@ import java.io.Writer;
 import java.util.Comparator;
 
 public class MergeSort {
-    public static void sort(Writer writer, ElementsStreamFromReaders elements, Comparator<Object> comparator) {
+    public static void mergeSort(Writer writer, ElementsGetterFromReaders elements, Comparator<Object> comparator) {
         int inputFilesCount = elements.getReadersCount();
 
         while (inputFilesCount > 0) {
