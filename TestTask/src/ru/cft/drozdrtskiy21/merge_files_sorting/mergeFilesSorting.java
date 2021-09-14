@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class mergeFilesSorting {
     public static void main(String[] args) {
-        List<String> arguments = giveListArguments(args);
+        List<String> arguments = getListArguments(args);
 
         if (arguments.size() < 4) {
             if (arguments.size() == 3) {
@@ -51,7 +51,7 @@ public class mergeFilesSorting {
         }
     }
 
-    private static List<String> giveListArguments(String[] args) {
+    private static List<String> getListArguments(String[] args) {
         if (args.length > Arrays.stream(args).collect(Collectors.toSet()).size()) {
             System.out.println("Invalid parameters: duplicates.");
 
