@@ -66,7 +66,7 @@ public class ElementsFromReaders implements ElementsGetterFromReaders {
     }
 
     @Override
-    public boolean isUpdatedElement(int readerIndex) {
+    public boolean tryUpdateElement(int readerIndex) {
         if (readerIndex < 0 || readerIndex >= readersCount) {
             throw new IndexOutOfBoundsException("Index = " + readerIndex + ", valid value: [0, " + (readersCount - 1) + "].");
         }

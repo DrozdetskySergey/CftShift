@@ -4,16 +4,12 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class mergeFilesSorting {
+public class mergeFilesSort {
     public static void main(String[] args) {
-        List<String> arguments = getListArguments(args);
+        List<String> arguments = getArgumentsList(args);
 
         if (arguments.size() < 4) {
-            if (arguments.size() == 3) {
-                System.out.println("Invalid parameters: minimum one [input file name]");
-            }
-
-            System.out.printf("mergeFilesSorting [-a] [-d] [-s] [-i] [output file name] [input file1 name] [input file2 name] [..]%n-a  ascending order%n-d  descending order%n-s  String type%n-i  Integer type%n");
+            System.out.printf("mergeFilesSorting [-a | -d] [-s | -i] [output_file_name] [input_file_1_name] ([input_file_2_name]..)%n-a  ascending order%n-d  descending order%n-s  String type%n-i  Integer type%n");
 
             return;
         }
@@ -51,7 +47,7 @@ public class mergeFilesSorting {
         }
     }
 
-    private static List<String> getListArguments(String[] args) {
+    private static List<String> getArgumentsList(String[] args) {
         if (args.length > Arrays.stream(args).collect(Collectors.toSet()).size()) {
             System.out.println("Invalid parameters: duplicates.");
 

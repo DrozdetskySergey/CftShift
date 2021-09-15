@@ -6,18 +6,18 @@ import java.util.Comparator;
 
 public class MergeSort {
     public static void mergeSort(Writer writer, ElementsGetterFromReaders elements, Comparator<Object> comparator) {
-        int inputFilesCount = elements.getReadersCount();
+        int readersCount = elements.getReadersCount();
 
-        while (inputFilesCount > 0) {
-            int writableElementIndex = 0;
+        while (readersCount > 0) {
+            int nextElementIndex = 0;
 
-            for (int i = 1; i < inputFilesCount; i++) {
-                if (comparator.compare(elements.getElement(writableElementIndex), elements.getElement(i)) > 0) {
-                    writableElementIndex = i;
+            for (int i = 1; i < readersCount; i++) {
+                if (comparator.compare(elements.getElement(nextElementIndex), elements.getElement(i)) > 0) {
+                    nextElementIndex = i;
                 }
             }
 
-            Object writableElement = elements.getElement(writableElementIndex);
+            Object writableElement = elements.getElement(nextElementIndex);
 
             try {
                 writer.write(String.format("%s%n", writableElement));
@@ -27,16 +27,16 @@ public class MergeSort {
                 return;
             }
 
-            boolean hasNextElementByIndex = elements.isUpdatedElement(writableElementIndex);
+            boolean hasNextElementByIndex = elements.tryUpdateElement(nextElementIndex);
 
             if (!hasNextElementByIndex) {
-                inputFilesCount = elements.getReadersCount();
+                readersCount = elements.getReadersCount(); // = readersCount - 1
             } else {
-                while (comparator.compare(writableElement, elements.getElement(writableElementIndex)) > 0) {
-                    hasNextElementByIndex = elements.isUpdatedElement(writableElementIndex);
+                while (comparator.compare(writableElement, elements.getElement(nextElementIndex)) > 0) {
+                    hasNextElementByIndex = elements.tryUpdateElement(nextElementIndex); // next element is not sorted -> update again
 
                     if (!hasNextElementByIndex) {
-                        inputFilesCount = elements.getReadersCount();
+                        readersCount = elements.getReadersCount();
 
                         break;
                     }

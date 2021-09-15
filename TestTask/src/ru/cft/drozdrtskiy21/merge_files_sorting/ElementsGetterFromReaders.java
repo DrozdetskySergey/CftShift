@@ -5,5 +5,5 @@ public interface ElementsGetterFromReaders {
 
     Object getElement(int readerIndex);
 
-    boolean isUpdatedElement(int readerIndex);
+    boolean tryUpdateElement(int readerIndex);
 }
