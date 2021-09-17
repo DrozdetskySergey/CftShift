@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class MergeFilesSort {
     public static void main(String[] args) {
-        List<String> arguments = getArgumentsList(new String[]{"-d", "-s", "out.txt", "in1.txt", "in2.txt", "in3.txt"});
+        List<String> arguments = getArgumentsList(args);
 
         if (arguments.size() < 4) {
             System.out.printf("mergeFilesSorting [-a | -d] [-s | -i] [output_file_name] [input_file_1_name] ([input_file_2_name]..)%n-a  ascending order%n-d  descending order%n-s  String type%n-i  Integer type%n");
