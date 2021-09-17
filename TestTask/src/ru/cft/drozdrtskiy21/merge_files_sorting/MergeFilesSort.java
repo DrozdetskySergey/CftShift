@@ -4,9 +4,9 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class mergeFilesSort {
+public class MergeFilesSort {
     public static void main(String[] args) {
-        List<String> arguments = getArgumentsList(args);
+        List<String> arguments = getArgumentsList(new String[]{"-d", "-s", "out.txt", "in1.txt", "in2.txt", "in3.txt"});
 
         if (arguments.size() < 4) {
             System.out.printf("mergeFilesSorting [-a | -d] [-s | -i] [output_file_name] [input_file_1_name] ([input_file_2_name]..)%n-a  ascending order%n-d  descending order%n-s  String type%n-i  Integer type%n");
@@ -14,7 +14,7 @@ public class mergeFilesSort {
             return;
         }
 
-        boolean isAscend = Boolean.parseBoolean(arguments.remove(0));
+        boolean isAscending = Boolean.parseBoolean(arguments.remove(0));
         ElementType type = ElementType.valueOf(arguments.remove(0));
         String outputFileName = arguments.remove(0);
 
@@ -26,23 +26,21 @@ public class mergeFilesSort {
             }
 
             ElementsGetterFromReaders elements = new ElementsFromReaders(new ArrayList<>(readers), type);
-            Comparator<Object> comparator = getComparator(isAscend, type);
+            Comparator<Object> comparator = getComparator(isAscending, type);
 
             MergeSort.mergeSort(writer, elements, comparator);
-
-            writer.flush();
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         } catch (IOException e) {
             System.out.println("Problem with input or output file(s)!");
         } finally {
-            try {
-                for (BufferedReader reader : readers) {
-                    if (reader != null) {
-                        reader.close();
+            for (BufferedReader r : readers) {
+                if (r != null) {
+                    try {
+                        r.close();
+                    } catch (IOException ignored) {
                     }
                 }
-            } catch (IOException ignored) {
             }
         }
     }
@@ -117,8 +115,8 @@ public class mergeFilesSort {
         return Collections.emptyList();
     }
 
-    private static Comparator<Object> getComparator(boolean isAscend, ElementType type) {
-        if (isAscend) {
+    private static Comparator<Object> getComparator(boolean isAscending, ElementType type) {
+        if (isAscending) {
             switch (type) {
                 case INTEGER -> {
                     return Comparator.comparing(o -> ((Integer) o));

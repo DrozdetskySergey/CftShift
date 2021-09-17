@@ -44,7 +44,6 @@ public class ElementsFromReaders implements ElementsGetterFromReaders {
                     } catch (NumberFormatException | StringFormatException ignored) {
                     }
                 }
-
             } while (nextLine != null); // bad format of first line (BufferedReader r) -> try read next line
         }
 
@@ -98,7 +97,6 @@ public class ElementsFromReaders implements ElementsGetterFromReaders {
                 } catch (NumberFormatException | StringFormatException ignored) {
                 }
             }
-
         } while (nextLine != null); // bad format of line (readers[index]) -> try read next line
 
         elements.remove(readerIndex);
