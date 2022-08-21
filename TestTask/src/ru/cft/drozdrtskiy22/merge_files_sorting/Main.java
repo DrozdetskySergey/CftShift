@@ -62,7 +62,7 @@ public class Main {
 
         try (MergeFilesSort mergeFilesSort = new MergeFilesSort(sortDirection, elementType, outputFile, inputFiles)) {
             mergeFilesSort.sort();
-            System.out.println("Done!");
+            System.out.printf("Done. Result file: \"%s\"%n", outputFile.toAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }

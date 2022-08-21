@@ -67,8 +67,7 @@ public class MergeFilesSort implements AutoCloseable {
         Path tempFile = Paths.get(UUID.randomUUID().toString() + ".tmp");
         tempFiles.add(tempFile);
 
-        try (BufferedWriter fileWriter = Files.newBufferedWriter(tempFile,
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
+        try (BufferedWriter fileWriter = Files.newBufferedWriter(tempFile)) {
 
             FileElement alfaSupplierElement = alfaSupplier.next();
             FileElement betaSupplierElement = betaSupplier.next();
