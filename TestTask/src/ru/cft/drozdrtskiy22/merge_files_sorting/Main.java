@@ -47,8 +47,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        args = new String[]{"-d", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
-
         List<String> arguments = Arrays.asList(args);
 
         SortDirection sortDirection = fetchSortDirection(arguments);
