@@ -1,5 +1,9 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting;
 
+import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
+import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplierFactory;
+import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.SupplierFactory;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -60,7 +64,11 @@ public class Main {
             return;
         }
 
-        try (MergeFilesSort mergeFilesSort = new MergeFilesSort(sortDirection, elementType, outputFile, inputFiles)) {
+        Comparator<FileElement> comparator = sortDirection == SortDirection.DESC ? Comparator.reverseOrder() : Comparator.naturalOrder();
+
+        SupplierFactory supplierFactory = new FileElementSupplierFactory(elementType, comparator);
+
+        try (MergeFilesSort mergeFilesSort = new MergeFilesSort(comparator, supplierFactory, outputFile, inputFiles)) {
             mergeFilesSort.sort();
             System.out.printf("Done. Result file: \"%s\"%n", outputFile.toAbsolutePath());
         } catch (Exception e) {
