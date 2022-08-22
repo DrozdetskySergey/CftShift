@@ -28,6 +28,13 @@ public class MergeFilesSort implements AutoCloseable {
         tempFiles = new ArrayList<>();
     }
 
+    @Override
+    public void close() throws IOException {
+        for (Path p : tempFiles) {
+            Files.deleteIfExists(p);
+        }
+    }
+
     public void sort() throws Exception {
         Path alfaFile = inputFiles.get(0);
 
@@ -81,12 +88,5 @@ public class MergeFilesSort implements AutoCloseable {
         }
 
         return tempFile;
-    }
-
-    @Override
-    public void close() throws IOException {
-        for (Path p : tempFiles) {
-            Files.deleteIfExists(p);
-        }
     }
 }
