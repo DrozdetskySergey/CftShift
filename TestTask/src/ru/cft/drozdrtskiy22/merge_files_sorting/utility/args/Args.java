@@ -90,7 +90,7 @@ public class Args {
 
         checkUnknownArguments();
         checkConflictArguments();
-        //TODO check?
+        //TODO check anything else?
     }
 
     private void checkUnknownArguments() throws ArgsException {

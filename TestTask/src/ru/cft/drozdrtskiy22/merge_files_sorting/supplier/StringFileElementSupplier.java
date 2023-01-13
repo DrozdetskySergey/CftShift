@@ -35,11 +35,6 @@ public class StringFileElementSupplier implements FileElementSupplier {
                 invalidLinesCount++;
                 continue;
             }
-//                if (prevStringFileElement != null && comparator.compare(stringFileElement, prevStringFileElement) < 0) {
-//                    continue;
-//                }
-//
-//                prevStringFileElement = stringFileElement;
 
             return new StringFileElement(line);
         }
@@ -52,5 +47,7 @@ public class StringFileElementSupplier implements FileElementSupplier {
         if (lineIterator != null) {
             lineIterator.close();
         }
+
+        System.out.println("invalidLinesCount = " + invalidLinesCount);
     }
 }

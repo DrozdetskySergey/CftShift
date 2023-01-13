@@ -40,53 +40,52 @@ public class MergeFilesSort implements AutoCloseable {
     }
 
     public void sort() throws Exception {
-        Path alfaFile = inputFiles.get(0);
-
         if (inputFiles.size() == 1) {
-            try (FileElementSupplier supplier = supplierFactory.get(alfaFile);
-                 BufferedWriter fileWriter = Files.newBufferedWriter(outputFile)) {
-
-                for (FileElement fileElement = supplier.next(); fileElement != null; fileElement = supplier.next()) {
-                    fileWriter.write(fileElement.toWritableFormat());
-                }
-            }
+            saveFirstInputFileToOutputFile();
 
             return;
         }
 
-        for (int i = 1; i < inputFiles.size(); i++) {
-            try (FileElementSupplier alfaSupplier = supplierFactory.get(alfaFile);
-                 FileElementSupplier betaSupplier = supplierFactory.get(inputFiles.get(i))) {
+        Path resultFile = inputFiles.get(0);
 
-                alfaFile = sortTwoFilesWithMerge(alfaSupplier, betaSupplier);
-            }
+        for (int i = 1; i < inputFiles.size(); i++) {
+            resultFile = sortTwoFilesWithMergeAndSaveToFile(resultFile, inputFiles.get(i));
         }
 
-        Files.copy(alfaFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(resultFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private Path sortTwoFilesWithMerge(FileElementSupplier alfaSupplier, FileElementSupplier betaSupplier) throws IOException {
+    private void saveFirstInputFileToOutputFile() throws Exception {
+        try (FileElementSupplier supplier = supplierFactory.get(inputFiles.get(0));
+             BufferedWriter fileWriter = Files.newBufferedWriter(outputFile)) {
+
+            for (FileElement fileElement = supplier.next(); fileElement != null; fileElement = supplier.next()) {
+                fileWriter.write(fileElement.toWritableFormat());
+            }
+        }
+    }
+
+    private Path sortTwoFilesWithMergeAndSaveToFile(Path firstFile, Path secondFile) throws Exception {
         Path tempFile = Paths.get(UUID.randomUUID().toString() + ".tmp");
         tempFiles.add(tempFile);
 
-        try (BufferedWriter fileWriter = Files.newBufferedWriter(tempFile)) {
+        try (BufferedWriter fileWriter = Files.newBufferedWriter(tempFile);
+             FileElementSupplier firstSupplier = supplierFactory.get(firstFile);
+             FileElementSupplier secondSupplier = supplierFactory.get(secondFile)) {
 
-            FileElement alfaSupplierElement = alfaSupplier.next();
-            FileElement betaSupplierElement = betaSupplier.next();
+            FileElement alfa = firstSupplier.next();
+            FileElement beta = secondSupplier.next();
 
-            while (alfaSupplierElement != null || betaSupplierElement != null) {
-                if (alfaSupplierElement == null) {
-                    fileWriter.write(betaSupplierElement.toWritableFormat());
-                    betaSupplierElement = betaSupplier.next();
-                } else if (betaSupplierElement == null) {
-                    fileWriter.write(alfaSupplierElement.toWritableFormat());
-                    alfaSupplierElement = alfaSupplier.next();
-                } else if (comparator.compare(alfaSupplierElement, betaSupplierElement) < 0) {
-                    fileWriter.write(alfaSupplierElement.toWritableFormat());
-                    alfaSupplierElement = alfaSupplier.next();
+            while (alfa != null || beta != null) {
+                if (alfa == null) {
+                    fileWriter.write(beta.toWritableFormat());
+                    beta = secondSupplier.next();
+                } else if (beta == null || comparator.compare(alfa, beta) < 0) {
+                    fileWriter.write(alfa.toWritableFormat());
+                    alfa = firstSupplier.next();
                 } else {
-                    fileWriter.write(betaSupplierElement.toWritableFormat());
-                    betaSupplierElement = betaSupplier.next();
+                    fileWriter.write(beta.toWritableFormat());
+                    beta = secondSupplier.next();
                 }
             }
         }

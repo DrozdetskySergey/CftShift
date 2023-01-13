@@ -52,5 +52,7 @@ public class IntegerFileElementSupplier implements FileElementSupplier {
         if (lineIterator != null) {
             lineIterator.close();
         }
+
+        System.out.println("invalidLinesCount = " + invalidLinesCount);
     }
 }
