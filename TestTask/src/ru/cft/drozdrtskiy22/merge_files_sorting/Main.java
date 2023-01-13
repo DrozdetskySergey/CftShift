@@ -16,7 +16,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        args = new String[]{"-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
+        args = new String[]{"-a", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
 
         if (args.length < 3) {
             Message.INFO.show();

@@ -53,7 +53,7 @@ public class Args {
     }
 
     private ElementType fetchElementType() {
-        ElementType result = ElementType.UNKNOWN;
+        ElementType result = null;
 
         if (arguments.contains("-s")) {
             result = ElementType.STRING;
@@ -81,13 +81,19 @@ public class Args {
     }
 
     private void checkArgumentsValid() throws ArgsException {
-        if (elementType == ElementType.UNKNOWN
+        if (elementType == null
                 || outputFile == null
                 || inputFiles.isEmpty()
                 || inputFiles.contains(outputFile)) {
             throw new ArgsException("Не верные параметры.");
         }
 
+        checkUnknownArguments();
+        checkConflictArguments();
+        //TODO check?
+    }
+
+    private void checkUnknownArguments() throws ArgsException {
         List<String> keys = arguments.stream()
                 .filter(e -> e.startsWith("-"))
                 .collect(Collectors.toList());
@@ -96,6 +102,16 @@ public class Args {
 
         if (keys.size() > 0) {
             throw new ArgsException("Не известный параметр: " + keys.get(0));
+        }
+    }
+
+    private void checkConflictArguments() throws ArgsException {
+        if (arguments.contains("-a") && arguments.contains("-d")) {
+            throw new ArgsException("Не верные параметры. (-a либо -d)");
+        }
+
+        if (arguments.contains("-s") && arguments.contains("-i")) {
+            throw new ArgsException("Не верные параметры, [-s либо -i]");
         }
     }
 }
