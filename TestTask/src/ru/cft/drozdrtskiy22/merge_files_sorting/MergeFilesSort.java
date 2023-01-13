@@ -2,11 +2,16 @@ package ru.cft.drozdrtskiy22.merge_files_sorting;
 
 import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
 import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplier;
-import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.SupplierFactory;
+import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplierFactory;
+import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.Args;
+import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.SortDirection;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -15,24 +20,23 @@ import java.util.UUID;
 public class MergeFilesSort implements AutoCloseable {
 
     private final Comparator<FileElement> comparator;
-    private final SupplierFactory supplierFactory;
+    private final FileElementSupplierFactory supplierFactory;
     private final Path outputFile;
     private final List<Path> inputFiles;
     private final List<Path> tempFiles;
 
-    public MergeFilesSort(Comparator<FileElement> comparator, SupplierFactory supplierFactory, Path outputFile, List<Path> inputFiles) {
-        this.comparator = comparator;
-        this.supplierFactory = supplierFactory;
-        this.outputFile = outputFile;
-        this.inputFiles = inputFiles;
-        tempFiles = new ArrayList<>();
+    public static MergeFilesSort withArguments(Args arguments) {
+        return new MergeFilesSort(arguments);
     }
 
-    @Override
-    public void close() throws IOException {
-        for (Path p : tempFiles) {
-            Files.deleteIfExists(p);
-        }
+    private MergeFilesSort(Args arguments) {
+        this.comparator = arguments.getSortDirection() == SortDirection.DESC ?
+                Comparator.reverseOrder() :
+                Comparator.naturalOrder();
+        this.supplierFactory = FileElementSupplierFactory.forElementType(arguments.getElementType());
+        this.outputFile = arguments.getOutputFile();
+        this.inputFiles = arguments.getInputFiles();
+        tempFiles = new ArrayList<>();
     }
 
     public void sort() throws Exception {
@@ -88,5 +92,12 @@ public class MergeFilesSort implements AutoCloseable {
         }
 
         return tempFile;
+    }
+
+    @Override
+    public void close() throws IOException {
+        for (Path p : tempFiles) {
+            Files.deleteIfExists(p);
+        }
     }
 }

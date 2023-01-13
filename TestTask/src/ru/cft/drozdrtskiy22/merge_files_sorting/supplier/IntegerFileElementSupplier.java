@@ -1,24 +1,30 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.supplier;
 
+import org.apache.commons.io.LineIterator;
 import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
+import ru.cft.drozdrtskiy22.merge_files_sorting.element.IntegerFileElement;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
-
-import org.apache.commons.io.LineIterator; // 2.11.0
-import ru.cft.drozdrtskiy22.merge_files_sorting.element.IntegerFileElement;
 
 public class IntegerFileElementSupplier implements FileElementSupplier {
 
     private final LineIterator lineIterator;
-    private final Comparator<FileElement> comparator;
-    private IntegerFileElement prevIntegerFileElement;
+    int invalidLinesCount;
 
-    public IntegerFileElementSupplier(Path path, Comparator<FileElement> comparator) throws IOException {
+    public static IntegerFileElementSupplier forFile(Path path) throws IOException {
+        return new IntegerFileElementSupplier(path);
+    }
+
+    private IntegerFileElementSupplier(Path path) throws IOException {
         lineIterator = new LineIterator(Files.newBufferedReader(path));
-        this.comparator = comparator;
+        invalidLinesCount = 0;
+    }
+
+    @Override
+    public int getInvalidLinesCount() {
+        return invalidLinesCount;
     }
 
     @Override
@@ -27,20 +33,14 @@ public class IntegerFileElementSupplier implements FileElementSupplier {
             String line = lineIterator.nextLine();
 
             if (line.isEmpty() || line.contains(" ")) {
+                invalidLinesCount++;
                 continue;
             }
 
             try {
-                IntegerFileElement integerFileElement = new IntegerFileElement(Integer.valueOf(line));
-
-                if (prevIntegerFileElement != null && comparator.compare(integerFileElement, prevIntegerFileElement) < 0) {
-                    continue;
-                }
-
-                prevIntegerFileElement = integerFileElement;
-
-                return integerFileElement;
-            } catch (NumberFormatException ignored) {
+                return new IntegerFileElement(Integer.valueOf(line));
+            } catch (NumberFormatException e) {
+                invalidLinesCount++;
             }
         }
 

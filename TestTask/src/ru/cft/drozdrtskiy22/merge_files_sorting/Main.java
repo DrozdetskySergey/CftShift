@@ -1,17 +1,8 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting;
 
-import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
-import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplierFactory;
-import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.SupplierFactory;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.Args;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ArgsException;
-import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ElementType;
-import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.SortDirection;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.message.Message;
-
-import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.List;
 
 public class Main {
 
@@ -26,10 +17,10 @@ public class Main {
             return;
         }
 
-        Args arg;
+        Args arguments;
 
         try {
-            arg = Args.fromArray(args);
+            arguments = Args.fromArray(args);
         } catch (ArgsException e) {
             System.out.println(e.getMessage());
             Message.PARAMS.show();
@@ -37,19 +28,9 @@ public class Main {
             return;
         }
 
-        SortDirection sortDirection = arg.getSortDirection();
-        ElementType elementType = arg.getElementType();
-        Path outputFile = arg.getOutputFile();
-        List<Path> inputFiles = arg.getInputFiles();
-
-        Comparator<FileElement> comparator =
-                sortDirection == SortDirection.DESC ? Comparator.reverseOrder() : Comparator.naturalOrder();
-
-        SupplierFactory supplierFactory = new FileElementSupplierFactory(elementType, comparator);
-
-        try (MergeFilesSort mergeFilesSort = new MergeFilesSort(comparator, supplierFactory, outputFile, inputFiles)) {
+        try (MergeFilesSort mergeFilesSort = MergeFilesSort.withArguments(arguments)) {
             mergeFilesSort.sort();
-            System.out.printf("Done. Result file: \"%s\"%n", outputFile.toAbsolutePath());
+            System.out.printf("Done. Result file: \"%s\"%n", arguments.getOutputFile().toAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }
