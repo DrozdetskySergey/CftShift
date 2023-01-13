@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.supplier;
 
-import ru.cft.drozdrtskiy22.merge_files_sorting.ElementType;
+import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ElementType;
 import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
 
 import java.io.IOException;
