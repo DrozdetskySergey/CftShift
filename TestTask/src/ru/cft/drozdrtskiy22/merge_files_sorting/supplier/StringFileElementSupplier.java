@@ -8,10 +8,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class StringFileElementSupplier implements FileElementSupplier {
+public final class StringFileElementSupplier implements FileElementSupplier {
 
     private final LineIterator lineIterator;
-    int invalidLinesCount;
+    private final Path path;
+    private int invalidLinesCount;
 
     public static StringFileElementSupplier forFile(Path path) throws IOException {
         return new StringFileElementSupplier(path);
@@ -19,11 +20,7 @@ public class StringFileElementSupplier implements FileElementSupplier {
 
     private StringFileElementSupplier(Path path) throws IOException {
         lineIterator = new LineIterator(Files.newBufferedReader(path));
-    }
-
-    @Override
-    public int getInvalidLinesCount() {
-        return invalidLinesCount;
+        this.path = path;
     }
 
     @Override
@@ -43,11 +40,17 @@ public class StringFileElementSupplier implements FileElementSupplier {
     }
 
     @Override
-    public void close() throws IOException {
-        if (lineIterator != null) {
-            lineIterator.close();
+    public void close() {
+        if (invalidLinesCount > 0) {
+            System.out.println("Файл " + path.getFileName() + " содержал ошибочных строк = " + invalidLinesCount);
         }
 
-        System.out.println("invalidLinesCount = " + invalidLinesCount);
+        if (lineIterator != null) {
+            try {
+                lineIterator.close();
+            } catch (IOException e) {
+                System.out.println("Закрытие файлов. Что-то пошло не так." + e.getMessage());
+            }
+        }
     }
 }

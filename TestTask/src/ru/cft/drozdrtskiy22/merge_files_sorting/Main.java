@@ -4,7 +4,7 @@ import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.Args;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ArgsException;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.message.Message;
 
-public class Main {
+public final class Main {
 
     public static void main(String[] args) {
         args = new String[]{"-a", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
@@ -21,6 +21,7 @@ public class Main {
 
         try {
             arguments = Args.fromArray(args);
+            checkExistenceFiles();
         } catch (ArgsException e) {
             System.out.println(e.getMessage());
             Message.PARAMS.show();
@@ -30,9 +31,13 @@ public class Main {
 
         try (MergeFilesSort mergeFilesSort = MergeFilesSort.withArguments(arguments)) {
             mergeFilesSort.sort();
-            System.out.printf("Done. Result file: \"%s\"%n", arguments.getOutputFile().toAbsolutePath());
+            System.out.printf("Результат в файле: \"%s\"%n", arguments.getOutputFile().toAbsolutePath());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Работа с файлами. Что-то пошло не так." + e.getMessage());
         }
+    }
+
+    private static void checkExistenceFiles() throws ArgsException {
+        //TODO check
     }
 }

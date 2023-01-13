@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Args {
+public final class Args {
 
     private final List<String> arguments;
     private final SortDirection sortDirection;

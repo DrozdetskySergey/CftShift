@@ -5,19 +5,19 @@ import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ElementType;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class FileElementSupplierFactory {
+public final class FileElementSupplierDispatcher {
 
     private final ElementType elementType;
 
-    public static FileElementSupplierFactory forElementType(ElementType elementType) {
-        return new FileElementSupplierFactory(elementType);
+    public static FileElementSupplierDispatcher forElementType(ElementType elementType) {
+        return new FileElementSupplierDispatcher(elementType);
     }
 
-    private FileElementSupplierFactory(ElementType elementType) {
+    private FileElementSupplierDispatcher(ElementType elementType) {
         this.elementType = elementType;
     }
 
-    public FileElementSupplier get(Path path) throws IOException {
+    public FileElementSupplier createWithFile(Path path) throws IOException {
         return elementType == ElementType.INTEGER ?
                 IntegerFileElementSupplier.forFile(path) :
                 StringFileElementSupplier.forFile(path);
