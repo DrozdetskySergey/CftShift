@@ -4,6 +4,9 @@ import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.Args;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ArgsException;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.message.Message;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public final class Main {
 
     public static void main(String[] args) {
@@ -21,7 +24,6 @@ public final class Main {
 
         try {
             arguments = Args.fromArray(args);
-            checkExistenceFiles();
         } catch (ArgsException e) {
             System.out.println(e.getMessage());
             Message.PARAMS.show();
@@ -29,15 +31,19 @@ public final class Main {
             return;
         }
 
-        try (MergeFilesSort mergeFilesSort = MergeFilesSort.withArguments(arguments)) {
-            mergeFilesSort.sort();
-            System.out.printf("Результат в файле: \"%s\"%n", arguments.getOutputFile().toAbsolutePath());
-        } catch (Exception e) {
-            System.out.println("Работа с файлами. Что-то пошло не так." + e.getMessage());
-        }
-    }
+        for (Path path : arguments.getInputFiles()) {
+            if (!Files.isReadable(path)) {
+                System.out.printf("Входящий файл %s недоступен для чтения.", path.getFileName());
 
-    private static void checkExistenceFiles() throws ArgsException {
-        //TODO check
+                return;
+            }
+        }
+
+        try (SorterFilesByMerge sorter = SorterFilesByMerge.withArguments(arguments)) {
+            sorter.sort();
+            System.out.printf("Результат в файле: %s%n", arguments.getOutputFile().toAbsolutePath());
+        } catch (Exception e) {
+            System.out.printf("Работа с файлами. Что-то пошло не так. %s%n", e.getMessage());
+        }
     }
 }

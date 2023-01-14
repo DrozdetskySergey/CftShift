@@ -17,7 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-public final class MergeFilesSort implements AutoCloseable {
+public final class SorterFilesByMerge implements AutoCloseable {
 
     private final Comparator<FileElement> comparator;
     private final FileElementSupplierDispatcher supplierDispatcher;
@@ -25,11 +25,11 @@ public final class MergeFilesSort implements AutoCloseable {
     private final List<Path> inputFiles;
     private final List<Path> tempFiles;
 
-    public static MergeFilesSort withArguments(Args arguments) {
-        return new MergeFilesSort(arguments);
+    public static SorterFilesByMerge withArguments(Args arguments) {
+        return new SorterFilesByMerge(arguments);
     }
 
-    private MergeFilesSort(Args arguments) {
+    private SorterFilesByMerge(Args arguments) {
         this.comparator = arguments.getSortDirection() == SortDirection.DESC ?
                 Comparator.reverseOrder() :
                 Comparator.naturalOrder();
@@ -95,11 +95,11 @@ public final class MergeFilesSort implements AutoCloseable {
 
     @Override
     public void close() {
-        for (Path p : tempFiles) {
+        for (Path path : tempFiles) {
             try {
-                Files.deleteIfExists(p);
+                Files.deleteIfExists(path);
             } catch (IOException e) {
-                System.out.println("Удаление временных файлов. Что-то пошло не так." + e.getMessage());
+                System.out.printf("Удаление временного файла %s Что-то пошло не так. %s%n", path.getFileName(), e.getMessage());
             }
         }
     }

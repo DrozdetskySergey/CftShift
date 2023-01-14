@@ -29,7 +29,9 @@ public final class Args {
         outputFile = fetchOutputFile();
         inputFiles = fetchInputFiles();
 
-        checkArgumentsValid();
+        checkValidityArguments();
+        checkForUnknownArguments();
+        checkForArgumentsConflict();
     }
 
     public SortDirection getSortDirection() {
@@ -80,20 +82,16 @@ public final class Args {
                 .collect(Collectors.toList());
     }
 
-    private void checkArgumentsValid() throws ArgsException {
+    private void checkValidityArguments() throws ArgsException {
         if (elementType == null
                 || outputFile == null
                 || inputFiles.isEmpty()
                 || inputFiles.contains(outputFile)) {
             throw new ArgsException("Не верные параметры.");
         }
-
-        checkUnknownArguments();
-        checkConflictArguments();
-        //TODO check anything else?
     }
 
-    private void checkUnknownArguments() throws ArgsException {
+    private void checkForUnknownArguments() throws ArgsException {
         List<String> keys = arguments.stream()
                 .filter(e -> e.startsWith("-"))
                 .collect(Collectors.toList());
@@ -105,7 +103,7 @@ public final class Args {
         }
     }
 
-    private void checkConflictArguments() throws ArgsException {
+    private void checkForArgumentsConflict() throws ArgsException {
         if (arguments.contains("-a") && arguments.contains("-d")) {
             throw new ArgsException("Не верные параметры. (-a либо -d)");
         }

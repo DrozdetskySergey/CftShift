@@ -34,6 +34,7 @@ public final class IntegerFileElementSupplier implements FileElementSupplier {
             }
 
             try {
+
                 return new IntegerFileElement(Integer.valueOf(line));
             } catch (NumberFormatException e) {
                 invalidLinesCount++;
@@ -46,14 +47,14 @@ public final class IntegerFileElementSupplier implements FileElementSupplier {
     @Override
     public void close() {
         if (invalidLinesCount > 0) {
-            System.out.println("Файл " + path.getFileName() + " содержал ошибочных строк = " + invalidLinesCount);
+            System.out.printf("В файле %s содержались ошибочные строки - %d шт.%n", path.getFileName(), invalidLinesCount);
         }
 
         if (lineIterator != null) {
             try {
                 lineIterator.close();
             } catch (IOException e) {
-                System.out.println("Закрытие файлов. Что-то пошло не так." + e.getMessage());
+                System.out.printf("Закрытие файла %s Что-то пошло не так. %s%n", path.getFileName(), e.getMessage());
             }
         }
     }
