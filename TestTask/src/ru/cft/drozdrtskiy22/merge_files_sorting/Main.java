@@ -39,6 +39,12 @@ public final class Main {
             }
         }
 
+        if (Files.exists(arguments.getOutputFile())) {
+            System.out.printf("Файл %s уже существует.%n", arguments.getOutputFile().getFileName());
+
+            return;
+        }
+
         try (SorterFilesByMerge sorter = SorterFilesByMerge.withArguments(arguments)) {
             sorter.sortFiles();
             System.out.printf("Результат в файле: %s%n", arguments.getOutputFile().toAbsolutePath());

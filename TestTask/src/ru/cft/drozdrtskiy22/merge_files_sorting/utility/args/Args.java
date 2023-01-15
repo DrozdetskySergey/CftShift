@@ -110,7 +110,7 @@ public final class Args {
         }
 
         if (keyArguments.size() > 0) {
-            throw new ArgsException("Не известный параметр: " + keyArguments.get(0));
+            throw new ArgsException("Не верный параметр: " + keyArguments.get(0));
         }
     }
 
