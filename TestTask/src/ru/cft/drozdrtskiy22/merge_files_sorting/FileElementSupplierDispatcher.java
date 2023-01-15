@@ -1,5 +1,8 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.supplier;
+package ru.cft.drozdrtskiy22.merge_files_sorting;
 
+import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.ElementSupplier;
+import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.file.IntegerFileElementSupplier;
+import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.file.StringFileElementSupplier;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ElementType;
 
 import java.io.IOException;
@@ -17,9 +20,9 @@ public final class FileElementSupplierDispatcher {
         this.elementType = elementType;
     }
 
-    public FileElementSupplier createWithFile(Path path) throws IOException {
+    public ElementSupplier createWithFile(Path path) throws IOException {
         return elementType == ElementType.INTEGER ?
-                IntegerFileElementSupplier.forFile(path) :
-                StringFileElementSupplier.forFile(path);
+                IntegerFileElementSupplier.fromFile(path) :
+                StringFileElementSupplier.fromFile(path);
     }
 }

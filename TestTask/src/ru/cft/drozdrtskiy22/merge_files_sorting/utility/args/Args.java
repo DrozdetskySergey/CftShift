@@ -20,8 +20,8 @@ public final class Args {
 
     private Args(List<String> arguments) throws ArgsException {
         this.arguments = arguments.stream()
+                .filter(s -> s != null && !s.isBlank())
                 .map(String::trim)
-                .distinct()
                 .collect(Collectors.toList());
 
         sortDirection = fetchSortDirection();
@@ -30,8 +30,9 @@ public final class Args {
         inputFiles = fetchInputFiles();
 
         checkValidityArguments();
-        checkForUnknownArguments();
-        checkForArgumentsConflict();
+        checkOutputFileNotMatchesInputFiles();
+        checkForUnknownKeys();
+        checkForKeysConflict();
     }
 
     public SortDirection getSortDirection() {
@@ -51,24 +52,29 @@ public final class Args {
     }
 
     private SortDirection fetchSortDirection() {
-        return arguments.contains("-d") ? SortDirection.DESC : SortDirection.ASC;
+        if (arguments.contains(Key.DESCENDING_ORDER.getSign())) {
+
+            return SortDirection.DESC;
+        }
+
+        return SortDirection.ASC;
     }
 
     private ElementType fetchElementType() {
-        ElementType result = null;
+        if (arguments.contains(Key.STRING_TYPE.getSign())) {
 
-        if (arguments.contains("-s")) {
-            result = ElementType.STRING;
-        } else if (arguments.contains("-i")) {
-            result = ElementType.INTEGER;
+            return ElementType.STRING;
+        } else if (arguments.contains(Key.INTEGER_TYPE.getSign())) {
+
+            return ElementType.INTEGER;
         }
 
-        return result;
+        return null;
     }
 
     private Path fetchOutputFile() {
         return arguments.stream()
-                .filter(e -> !e.startsWith("-"))
+                .filter(s -> !s.startsWith("-"))
                 .map(Paths::get)
                 .findFirst()
                 .orElse(null);
@@ -76,40 +82,47 @@ public final class Args {
 
     private List<Path> fetchInputFiles() {
         return arguments.stream()
-                .filter(e -> !e.startsWith("-"))
+                .filter(s -> !s.startsWith("-"))
                 .skip(1)
                 .map(Paths::get)
                 .collect(Collectors.toList());
     }
 
     private void checkValidityArguments() throws ArgsException {
-        if (elementType == null
-                || outputFile == null
-                || inputFiles.isEmpty()
-                || inputFiles.contains(outputFile)) {
-            throw new ArgsException("Не верные параметры.");
+        if (sortDirection == null || elementType == null || outputFile == null || inputFiles.isEmpty()) {
+            throw new ArgsException("Необходимые параметры не указаны.");
         }
     }
 
-    private void checkForUnknownArguments() throws ArgsException {
-        List<String> keys = arguments.stream()
+    private void checkOutputFileNotMatchesInputFiles() throws ArgsException {
+        if (inputFiles.contains(outputFile)) {
+            throw new ArgsException("Совпадение имени файла результата с именем входного файла.");
+        }
+    }
+
+    private void checkForUnknownKeys() throws ArgsException {
+        List<String> keyArguments = arguments.stream()
                 .filter(e -> e.startsWith("-"))
                 .collect(Collectors.toList());
 
-        keys.removeAll(Arrays.asList("-a", "-d", "-s", "-i"));
+        for (Key k : Key.values()) {
+            keyArguments.removeIf(s -> s.equals(k.getSign()));
+        }
 
-        if (keys.size() > 0) {
-            throw new ArgsException("Не известный параметр: " + keys.get(0));
+        if (keyArguments.size() > 0) {
+            throw new ArgsException("Не известный параметр: " + keyArguments.get(0));
         }
     }
 
-    private void checkForArgumentsConflict() throws ArgsException {
-        if (arguments.contains("-a") && arguments.contains("-d")) {
-            throw new ArgsException("Не верные параметры. (-a либо -d)");
+    private void checkForKeysConflict() throws ArgsException {
+        if (arguments.contains(Key.ASCENDING_ORDER.getSign())
+                && arguments.contains(Key.DESCENDING_ORDER.getSign())) {
+            throw new ArgsException("Конфликт параметров. (-a либо -d)");
         }
 
-        if (arguments.contains("-s") && arguments.contains("-i")) {
-            throw new ArgsException("Не верные параметры, [-s либо -i]");
+        if (arguments.contains(Key.STRING_TYPE.getSign())
+                && arguments.contains(Key.INTEGER_TYPE.getSign())) {
+            throw new ArgsException("Конфликт параметров. [-s либо -i]");
         }
     }
 }

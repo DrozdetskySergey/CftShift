@@ -1,6 +1,8 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.element;
+package ru.cft.drozdrtskiy22.merge_files_sorting.element.file;
 
-public class IntegerFileElement implements FileElement {
+import ru.cft.drozdrtskiy22.merge_files_sorting.element.Element;
+
+public class IntegerFileElement implements Element {
 
     private final Integer value;
 
@@ -14,7 +16,7 @@ public class IntegerFileElement implements FileElement {
     }
 
     @Override
-    public int compareTo(FileElement o) {
+    public int compareTo(Element o) {
         return value.compareTo(((IntegerFileElement) o).value);
     }
 }

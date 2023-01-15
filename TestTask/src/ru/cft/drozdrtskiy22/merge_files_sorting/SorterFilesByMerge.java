@@ -1,8 +1,7 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting;
 
-import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
-import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplier;
-import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplierDispatcher;
+import ru.cft.drozdrtskiy22.merge_files_sorting.element.Element;
+import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.Args;
 import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.SortDirection;
 
@@ -19,7 +18,7 @@ import java.util.UUID;
 
 public final class SorterFilesByMerge implements AutoCloseable {
 
-    private final Comparator<FileElement> comparator;
+    private final Comparator<Element> comparator;
     private final FileElementSupplierDispatcher supplierDispatcher;
     private final Path outputFile;
     private final List<Path> inputFiles;
@@ -56,11 +55,11 @@ public final class SorterFilesByMerge implements AutoCloseable {
     }
 
     private void saveFirstInputFileToOutputFile() throws Exception {
-        try (FileElementSupplier supplier = supplierDispatcher.createWithFile(inputFiles.get(0));
+        try (ElementSupplier supplier = supplierDispatcher.createWithFile(inputFiles.get(0));
              BufferedWriter fileWriter = Files.newBufferedWriter(outputFile)) {
 
-            for (FileElement fileElement = supplier.next(); fileElement != null; fileElement = supplier.next()) {
-                fileWriter.write(fileElement.toWritableFormat());
+            for (Element e = supplier.next(); e != null; e = supplier.next()) {
+                fileWriter.write(e.toWritableFormat());
             }
         }
     }
@@ -70,11 +69,11 @@ public final class SorterFilesByMerge implements AutoCloseable {
         tempFiles.add(tempFile);
 
         try (BufferedWriter fileWriter = Files.newBufferedWriter(tempFile);
-             FileElementSupplier firstSupplier = supplierDispatcher.createWithFile(firstFile);
-             FileElementSupplier secondSupplier = supplierDispatcher.createWithFile(secondFile)) {
+             ElementSupplier firstSupplier = supplierDispatcher.createWithFile(firstFile);
+             ElementSupplier secondSupplier = supplierDispatcher.createWithFile(secondFile)) {
 
-            FileElement alfa = firstSupplier.next();
-            FileElement beta = secondSupplier.next();
+            Element alfa = firstSupplier.next();
+            Element beta = secondSupplier.next();
 
             while (alfa != null || beta != null) {
                 if (alfa == null) {
@@ -95,11 +94,11 @@ public final class SorterFilesByMerge implements AutoCloseable {
 
     @Override
     public void close() {
-        for (Path path : tempFiles) {
+        for (Path p : tempFiles) {
             try {
-                Files.deleteIfExists(path);
+                Files.deleteIfExists(p);
             } catch (IOException e) {
-                System.out.printf("Удаление временного файла %s Что-то пошло не так. %s%n", path.getFileName(), e.getMessage());
+                System.out.printf("Удаление временного файла %s Что-то пошло не так. %s%n", p.getFileName(), e.getMessage());
             }
         }
     }

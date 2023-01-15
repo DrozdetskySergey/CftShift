@@ -1,6 +1,8 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.element;
+package ru.cft.drozdrtskiy22.merge_files_sorting.element.file;
 
-public class StringFileElement implements FileElement {
+import ru.cft.drozdrtskiy22.merge_files_sorting.element.Element;
+
+public class StringFileElement implements Element {
 
     private final String value;
 
@@ -14,7 +16,7 @@ public class StringFileElement implements FileElement {
     }
 
     @Override
-    public int compareTo(FileElement o) {
+    public int compareTo(Element o) {
         return value.compareTo(((StringFileElement) o).value);
     }
 }

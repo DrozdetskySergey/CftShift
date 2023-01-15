@@ -10,7 +10,7 @@ import java.nio.file.Path;
 public final class Main {
 
     public static void main(String[] args) {
-        args = new String[]{"-a", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
+        args = new String[]{"", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
 
         if (args.length < 3) {
             Message.INFO.show();
@@ -31,9 +31,9 @@ public final class Main {
             return;
         }
 
-        for (Path path : arguments.getInputFiles()) {
-            if (!Files.isReadable(path)) {
-                System.out.printf("Входящий файл %s недоступен для чтения.", path.getFileName());
+        for (Path p : arguments.getInputFiles()) {
+            if (!Files.isReadable(p)) {
+                System.out.printf("Входящий файл %s недоступен для чтения.", p.getFileName());
 
                 return;
             }
