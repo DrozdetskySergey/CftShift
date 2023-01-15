@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.element;
 
-public interface Element extends Comparable<Element> {
+public interface FileElement extends Comparable<FileElement> {
 
     String toWritableFormat();
 }

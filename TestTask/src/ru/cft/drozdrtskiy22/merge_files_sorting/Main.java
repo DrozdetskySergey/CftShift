@@ -40,10 +40,10 @@ public final class Main {
         }
 
         try (SorterFilesByMerge sorter = SorterFilesByMerge.withArguments(arguments)) {
-            sorter.sort();
+            sorter.sortFiles();
             System.out.printf("Результат в файле: %s%n", arguments.getOutputFile().toAbsolutePath());
         } catch (Exception e) {
-            System.out.printf("Работа с файлами. Что-то пошло не так. %s%n", e.getMessage());
+            System.out.printf("Что-то пошло не так. %s%n", e.getMessage());
         }
     }
 }
