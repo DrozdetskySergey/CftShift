@@ -1,5 +1,6 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.utility.args;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -30,9 +31,14 @@ public final class Args {
         inputFiles = fetchInputFiles();
 
         checkValidityArguments();
-        checkOutputFileNotMatchesInputFiles();
         checkForUnknownKeys();
         checkForKeysConflict();
+        checkOutputFileNotMatchesWithInputFiles();
+        checkInputFilesIsReadable();
+
+        if (isOutputFileCanNotBeOverwritten()) {
+            checkOutputFileIsNotExists();
+        }
     }
 
     public SortDirection getSortDirection() {
@@ -94,12 +100,6 @@ public final class Args {
         }
     }
 
-    private void checkOutputFileNotMatchesInputFiles() throws ArgsException {
-        if (inputFiles.contains(outputFile)) {
-            throw new ArgsException("Совпадение имени файла результата с именем входного файла.");
-        }
-    }
-
     private void checkForUnknownKeys() throws ArgsException {
         List<String> keyArguments = arguments.stream()
                 .filter(e -> e.startsWith("-"))
@@ -110,7 +110,7 @@ public final class Args {
         }
 
         if (keyArguments.size() > 0) {
-            throw new ArgsException("Не верный параметр: " + keyArguments.get(0));
+            throw new ArgsException(String.format("Не верный параметр: %s", keyArguments.get(0)));
         }
     }
 
@@ -123,6 +123,30 @@ public final class Args {
         if (arguments.contains(Key.STRING_TYPE.getSign())
                 && arguments.contains(Key.INTEGER_TYPE.getSign())) {
             throw new ArgsException("Конфликт параметров. [-s либо -i]");
+        }
+    }
+
+    private void checkOutputFileNotMatchesWithInputFiles() throws ArgsException {
+        if (inputFiles.contains(outputFile)) {
+            throw new ArgsException("Совпадение имён входного файла и файла для результата.");
+        }
+    }
+
+    private void checkInputFilesIsReadable() throws ArgsException {
+        for (Path p : inputFiles) {
+            if (!Files.isReadable(p)) {
+                throw new ArgsException(String.format("Входящий файл %s недоступен для чтения.", p.getFileName()));
+            }
+        }
+    }
+
+    private boolean isOutputFileCanNotBeOverwritten() {
+        return !arguments.contains(Key.OVERWRITE_OUTPUT_FILE.getSign());
+    }
+
+    private void checkOutputFileIsNotExists() throws ArgsException {
+        if (Files.exists(outputFile)) {
+            throw new ArgsException(String.format("Файл %s уже существует.", outputFile.getFileName()));
         }
     }
 }

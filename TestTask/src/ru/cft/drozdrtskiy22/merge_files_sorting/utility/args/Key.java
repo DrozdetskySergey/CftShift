@@ -5,7 +5,8 @@ enum Key {
     ASCENDING_ORDER("-a"),
     DESCENDING_ORDER("-d"),
     STRING_TYPE("-s"),
-    INTEGER_TYPE("-i");
+    INTEGER_TYPE("-i"),
+    OVERWRITE_OUTPUT_FILE("-r");
 
     private final String sign;
 
