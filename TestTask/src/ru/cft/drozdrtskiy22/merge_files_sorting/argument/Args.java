@@ -1,10 +1,12 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.utility.args;
+package ru.cft.drozdrtskiy22.merge_files_sorting.argument;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public final class Args {
@@ -21,7 +23,8 @@ public final class Args {
 
     private Args(List<String> arguments) throws ArgsException {
         this.arguments = arguments.stream()
-                .filter(s -> s != null && !s.isBlank())
+                .filter(Objects::nonNull)
+                .filter(Predicate.not(String::isBlank))
                 .map(String::trim)
                 .collect(Collectors.toList());
 
@@ -58,24 +61,25 @@ public final class Args {
     }
 
     private SortDirection fetchSortDirection() {
-        if (arguments.contains(Key.DESCENDING_ORDER.getSign())) {
+        SortDirection result = SortDirection.ASC;
 
-            return SortDirection.DESC;
+        if (arguments.contains(KeyList.DESCENDING_ORDER.getKey())) {
+            result = SortDirection.DESC;
         }
 
-        return SortDirection.ASC;
+        return result;
     }
 
     private ElementType fetchElementType() {
-        if (arguments.contains(Key.STRING_TYPE.getSign())) {
+        ElementType result = null;
 
-            return ElementType.STRING;
-        } else if (arguments.contains(Key.INTEGER_TYPE.getSign())) {
-
-            return ElementType.INTEGER;
+        if (arguments.contains(KeyList.STRING_TYPE.getKey())) {
+            result = ElementType.STRING;
+        } else if (arguments.contains(KeyList.INTEGER_TYPE.getKey())) {
+            result = ElementType.INTEGER;
         }
 
-        return null;
+        return result;
     }
 
     private Path fetchOutputFile() {
@@ -105,8 +109,8 @@ public final class Args {
                 .filter(e -> e.startsWith("-"))
                 .collect(Collectors.toList());
 
-        for (Key k : Key.values()) {
-            keyArguments.removeIf(s -> s.equals(k.getSign()));
+        for (KeyList k : KeyList.values()) {
+            keyArguments.removeIf(s -> s.equals(k.getKey()));
         }
 
         if (keyArguments.size() > 0) {
@@ -115,13 +119,13 @@ public final class Args {
     }
 
     private void checkForKeysConflict() throws ArgsException {
-        if (arguments.contains(Key.ASCENDING_ORDER.getSign())
-                && arguments.contains(Key.DESCENDING_ORDER.getSign())) {
+        if (arguments.contains(KeyList.ASCENDING_ORDER.getKey())
+                && arguments.contains(KeyList.DESCENDING_ORDER.getKey())) {
             throw new ArgsException("Конфликт параметров. (-a либо -d)");
         }
 
-        if (arguments.contains(Key.STRING_TYPE.getSign())
-                && arguments.contains(Key.INTEGER_TYPE.getSign())) {
+        if (arguments.contains(KeyList.STRING_TYPE.getKey())
+                && arguments.contains(KeyList.INTEGER_TYPE.getKey())) {
             throw new ArgsException("Конфликт параметров. [-s либо -i]");
         }
     }
@@ -141,7 +145,7 @@ public final class Args {
     }
 
     private boolean isOutputFileCanNotBeOverwritten() {
-        return !arguments.contains(Key.OVERWRITE_OUTPUT_FILE.getSign());
+        return !arguments.contains(KeyList.OVERWRITE_OUTPUT_FILE.getKey());
     }
 
     private void checkOutputFileIsNotExists() throws ArgsException {

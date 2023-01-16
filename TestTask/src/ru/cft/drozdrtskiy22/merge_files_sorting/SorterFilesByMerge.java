@@ -2,8 +2,8 @@ package ru.cft.drozdrtskiy22.merge_files_sorting;
 
 import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
 import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplier;
-import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.Args;
-import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.SortDirection;
+import ru.cft.drozdrtskiy22.merge_files_sorting.argument.Args;
+import ru.cft.drozdrtskiy22.merge_files_sorting.argument.SortDirection;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

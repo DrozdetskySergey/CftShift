@@ -1,13 +1,13 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting;
 
-import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.Args;
-import ru.cft.drozdrtskiy22.merge_files_sorting.utility.args.ArgsException;
-import ru.cft.drozdrtskiy22.merge_files_sorting.utility.message.Message;
+import ru.cft.drozdrtskiy22.merge_files_sorting.argument.Args;
+import ru.cft.drozdrtskiy22.merge_files_sorting.argument.ArgsException;
+import ru.cft.drozdrtskiy22.merge_files_sorting.message.Message;
 
 public final class Main {
 
     public static void main(String[] args) {
-        args = new String[]{"-r", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
+        args = new String[]{"-w", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
 
         if (args.length < 3) {
             Message.INFO.show();

@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.utility.args;
+package ru.cft.drozdrtskiy22.merge_files_sorting.argument;
 
 public final class ArgsException extends Exception {
 

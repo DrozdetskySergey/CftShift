@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.utility.message;
+package ru.cft.drozdrtskiy22.merge_files_sorting.message;
 
 public enum Message {
 
@@ -12,8 +12,8 @@ public enum Message {
             "    -d  сортировка по убыванию.%n" +
             "    -s  данные в виде String.%n" +
             "    -i  данные в виде Integer.%n" +
-            "    -r  перезаписывать файл с результатом.%n")),
-    PARAMS("Параметры: (-r) (-a | -d) [-s | -i] [имя файла для результата] [имя входного файла №1]..");
+            "    -w  перезаписывать файл с результатом.%n")),
+    PARAMS("Параметры: (-w) (-a | -d) [-s | -i] [имя файла для результата] [имя входного файла №1]..");
 
     private final String text;
 
