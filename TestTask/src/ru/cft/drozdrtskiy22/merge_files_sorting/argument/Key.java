@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.argument;
 
-enum KeyList {
+enum Key {
 
     ASCENDING_ORDER("-a"),
     DESCENDING_ORDER("-d"),
@@ -8,13 +8,13 @@ enum KeyList {
     INTEGER_TYPE("-i"),
     OVERWRITE_OUTPUT_FILE("-w");
 
-    private final String key;
+    private final String notation;
 
-    KeyList(String key) {
-        this.key = key;
+    Key(String notation) {
+        this.notation = notation;
     }
 
-    public String getKey() {
-        return key;
+    public String notation() {
+        return notation;
     }
 }

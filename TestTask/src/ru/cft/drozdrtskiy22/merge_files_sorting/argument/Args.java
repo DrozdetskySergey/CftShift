@@ -1,6 +1,7 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.argument;
 
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -11,7 +12,8 @@ import java.util.stream.Collectors;
 
 public final class Args {
 
-    private final List<String> arguments;
+    private List<String> keyNotations;
+    private List<Path> files;
     private final SortDirection sortDirection;
     private final ElementType elementType;
     private final Path outputFile;
@@ -22,26 +24,19 @@ public final class Args {
     }
 
     private Args(List<String> arguments) throws ArgsException {
-        this.arguments = arguments.stream()
-                .filter(Objects::nonNull)
-                .filter(Predicate.not(String::isBlank))
-                .map(String::trim)
-                .collect(Collectors.toList());
+        parseArgumentStrings(arguments);
 
         sortDirection = fetchSortDirection();
         elementType = fetchElementType();
         outputFile = fetchOutputFile();
         inputFiles = fetchInputFiles();
 
-        checkValidityArguments();
-        checkForUnknownKeys();
-        checkForKeysConflict();
+        checkArgsValidity();
+        checkKeysCorrectness();
+        checkKeysConflicts();
         checkOutputFileNotMatchesWithInputFiles();
         checkInputFilesIsReadable();
-
-        if (isOutputFileCanNotBeOverwritten()) {
-            checkOutputFileIsNotExists();
-        }
+        checkOutputFileCanBeOverwritten();
     }
 
     public SortDirection getSortDirection() {
@@ -60,10 +55,33 @@ public final class Args {
         return inputFiles;
     }
 
+
+    private void parseArgumentStrings(List<String> arguments) throws ArgsException {
+        List<String> validArguments = arguments.stream()
+                .filter(Objects::nonNull)
+                .filter(Predicate.not(String::isBlank))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        keyNotations = validArguments.stream()
+                .filter(s -> s.startsWith("-"))
+                .collect(Collectors.toList());
+
+        try {
+            files = validArguments.stream()
+                    .filter(s -> !s.startsWith("-"))
+                    .map(Paths::get)
+                    .collect(Collectors.toList());
+        } catch (InvalidPathException e) {
+            throw new ArgsException(String.format("Не допустимое имя файла. %s", e.getMessage()));
+        }
+
+    }
+
     private SortDirection fetchSortDirection() {
         SortDirection result = SortDirection.ASC;
 
-        if (arguments.contains(KeyList.DESCENDING_ORDER.getKey())) {
+        if (keyNotations.contains(Key.DESCENDING_ORDER.notation())) {
             result = SortDirection.DESC;
         }
 
@@ -73,9 +91,9 @@ public final class Args {
     private ElementType fetchElementType() {
         ElementType result = null;
 
-        if (arguments.contains(KeyList.STRING_TYPE.getKey())) {
+        if (keyNotations.contains(Key.STRING_TYPE.notation())) {
             result = ElementType.STRING;
-        } else if (arguments.contains(KeyList.INTEGER_TYPE.getKey())) {
+        } else if (keyNotations.contains(Key.INTEGER_TYPE.notation())) {
             result = ElementType.INTEGER;
         }
 
@@ -83,49 +101,45 @@ public final class Args {
     }
 
     private Path fetchOutputFile() {
-        return arguments.stream()
-                .filter(s -> !s.startsWith("-"))
-                .map(Paths::get)
+        return files.stream()
                 .findFirst()
                 .orElse(null);
     }
 
     private List<Path> fetchInputFiles() {
-        return arguments.stream()
-                .filter(s -> !s.startsWith("-"))
+        return files.stream()
                 .skip(1)
-                .map(Paths::get)
                 .collect(Collectors.toList());
     }
 
-    private void checkValidityArguments() throws ArgsException {
+    private void checkArgsValidity() throws ArgsException {
         if (sortDirection == null || elementType == null || outputFile == null || inputFiles.isEmpty()) {
             throw new ArgsException("Необходимые параметры не указаны.");
         }
     }
 
-    private void checkForUnknownKeys() throws ArgsException {
-        List<String> keyArguments = arguments.stream()
-                .filter(e -> e.startsWith("-"))
+    private void checkKeysCorrectness() throws ArgsException {
+        List<String> correctKeyNotations = Arrays.stream(Key.values())
+                .map(Key::notation)
                 .collect(Collectors.toList());
 
-        for (KeyList k : KeyList.values()) {
-            keyArguments.removeIf(s -> s.equals(k.getKey()));
-        }
+        String incorrectKeyNotations = keyNotations.stream()
+                .filter(Predicate.not(correctKeyNotations::contains))
+                .collect(Collectors.joining("], [", "[", "]"));
 
-        if (keyArguments.size() > 0) {
-            throw new ArgsException(String.format("Не верный параметр: %s", keyArguments.get(0)));
+        if (!incorrectKeyNotations.isBlank()) {
+            throw new ArgsException(String.format("Не известные параметры: %s", incorrectKeyNotations));
         }
     }
 
-    private void checkForKeysConflict() throws ArgsException {
-        if (arguments.contains(KeyList.ASCENDING_ORDER.getKey())
-                && arguments.contains(KeyList.DESCENDING_ORDER.getKey())) {
+    private void checkKeysConflicts() throws ArgsException {
+        if (keyNotations.contains(Key.ASCENDING_ORDER.notation())
+                && keyNotations.contains(Key.DESCENDING_ORDER.notation())) {
             throw new ArgsException("Конфликт параметров. (-a либо -d)");
         }
 
-        if (arguments.contains(KeyList.STRING_TYPE.getKey())
-                && arguments.contains(KeyList.INTEGER_TYPE.getKey())) {
+        if (keyNotations.contains(Key.STRING_TYPE.notation())
+                && keyNotations.contains(Key.INTEGER_TYPE.notation())) {
             throw new ArgsException("Конфликт параметров. [-s либо -i]");
         }
     }
@@ -144,12 +158,8 @@ public final class Args {
         }
     }
 
-    private boolean isOutputFileCanNotBeOverwritten() {
-        return !arguments.contains(KeyList.OVERWRITE_OUTPUT_FILE.getKey());
-    }
-
-    private void checkOutputFileIsNotExists() throws ArgsException {
-        if (Files.exists(outputFile)) {
+    private void checkOutputFileCanBeOverwritten() throws ArgsException {
+        if (Files.exists(outputFile) && !keyNotations.contains(Key.OVERWRITE_OUTPUT_FILE.notation())) {
             throw new ArgsException(String.format("Файл %s уже существует.", outputFile.getFileName()));
         }
     }
