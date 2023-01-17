@@ -127,7 +127,7 @@ public final class Args {
                 .filter(Predicate.not(correctKeyNotations::contains))
                 .collect(Collectors.joining("], [", "[", "]"));
 
-        if (!incorrectKeyNotations.isBlank()) {
+        if (!incorrectKeyNotations.equals("[]")) {
             throw new ArgsException(String.format("Не известные параметры: %s", incorrectKeyNotations));
         }
     }

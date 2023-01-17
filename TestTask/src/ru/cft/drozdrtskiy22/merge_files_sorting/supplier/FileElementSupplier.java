@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public abstract class FileElementSupplier implements AutoCloseable {
+public abstract class FileElementSupplier implements ElementSupplier, AutoCloseable {
 
     protected final LineIterator lineIterator;
     protected final Path path;
@@ -18,7 +18,8 @@ public abstract class FileElementSupplier implements AutoCloseable {
         this.path = path;
     }
 
-    abstract public FileElement next();
+    @Override
+    public abstract FileElement next();
 
     @Override
     public void close() {

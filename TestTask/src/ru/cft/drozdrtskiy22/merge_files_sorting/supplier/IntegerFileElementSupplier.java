@@ -1,6 +1,5 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.supplier;
 
-import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
 import ru.cft.drozdrtskiy22.merge_files_sorting.element.IntegerFileElement;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ public final class IntegerFileElementSupplier extends FileElementSupplier {
     }
 
     @Override
-    public FileElement next() {
+    public IntegerFileElement next() {
         while (lineIterator.hasNext()) {
             String line = lineIterator.nextLine();
 

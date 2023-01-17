@@ -1,5 +1,6 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting;
 
+import ru.cft.drozdrtskiy22.merge_files_sorting.element.Element;
 import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
 import ru.cft.drozdrtskiy22.merge_files_sorting.supplier.FileElementSupplier;
 import ru.cft.drozdrtskiy22.merge_files_sorting.argument.Args;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 public final class SorterFilesByMerge implements AutoCloseable {
 
-    private final Comparator<FileElement> comparator;
+    private final Comparator<Element> comparator;
     private final FileElementSupplierFactory fileElementSupplierFactory;
     private final Path outputFile;
     private final List<Path> inputFiles;

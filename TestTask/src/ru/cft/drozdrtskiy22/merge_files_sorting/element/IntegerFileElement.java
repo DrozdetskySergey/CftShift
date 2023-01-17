@@ -1,20 +1,13 @@
 package ru.cft.drozdrtskiy22.merge_files_sorting.element;
 
-public class IntegerFileElement implements FileElement {
-
-    private final Integer value;
+public class IntegerFileElement extends AbstractFileElement<Integer> {
 
     public IntegerFileElement(Integer value) {
-        this.value = value;
+        super(value);
     }
 
     @Override
-    public String toWritableFormat() {
-        return String.format("%s%n", value);
-    }
-
-    @Override
-    public int compareTo(FileElement o) {
+    public int compareTo(Element o) {
         return value.compareTo(((IntegerFileElement) o).value);
     }
 }

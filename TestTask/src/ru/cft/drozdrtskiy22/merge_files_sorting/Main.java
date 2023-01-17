@@ -7,7 +7,7 @@ import ru.cft.drozdrtskiy22.merge_files_sorting.message.Message;
 public final class Main {
 
     public static void main(String[] args) {
-        args = new String[]{"- ", "-r", "-w", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
+        args = new String[]{"", "", "-w", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
 
         if (args.length < 3) {
             Message.INFO.show();
