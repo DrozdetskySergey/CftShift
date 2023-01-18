@@ -1,4 +1,8 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.argument;
+package ru.cft.drozdrtskiy.sorting.argument.file;
+
+import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
+import ru.cft.drozdrtskiy.sorting.argument.ElementType;
+import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
@@ -10,7 +14,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public final class Args {
+public final class FileSorterArguments {
 
     private List<String> keyNotations;
     private List<Path> files;
@@ -19,11 +23,11 @@ public final class Args {
     private final Path outputFile;
     private final List<Path> inputFiles;
 
-    public static Args fromArray(String[] array) throws ArgsException {
-        return new Args(Arrays.asList(array));
+    public static FileSorterArguments from(String[] array) throws ArgsException {
+        return new FileSorterArguments(Arrays.asList(array));
     }
 
-    private Args(List<String> arguments) throws ArgsException {
+    private FileSorterArguments(List<String> arguments) throws ArgsException {
         parseArgumentStrings(arguments);
 
         sortDirection = fetchSortDirection();
@@ -135,18 +139,21 @@ public final class Args {
     private void checkKeysConflicts() throws ArgsException {
         if (keyNotations.contains(Key.ASCENDING_ORDER.notation())
                 && keyNotations.contains(Key.DESCENDING_ORDER.notation())) {
-            throw new ArgsException("Конфликт параметров. (-a либо -d)");
+            throw new ArgsException(String.format("Конфликт параметров. (%s либо %s)"
+                    , Key.ASCENDING_ORDER.notation(), Key.DESCENDING_ORDER.notation()));
         }
 
         if (keyNotations.contains(Key.STRING_TYPE.notation())
                 && keyNotations.contains(Key.INTEGER_TYPE.notation())) {
-            throw new ArgsException("Конфликт параметров. [-s либо -i]");
+            throw new ArgsException(String.format("Конфликт параметров. [%s либо %s]"
+                    , Key.STRING_TYPE.notation(), Key.INTEGER_TYPE.notation()));
         }
     }
 
     private void checkOutputFileNotMatchesWithInputFiles() throws ArgsException {
         if (inputFiles.contains(outputFile)) {
-            throw new ArgsException("Совпадение имён входного файла и файла для результата.");
+            throw new ArgsException(String.format("Совпадение имён входного файла %s и файла для результата."
+                    , outputFile));
         }
     }
 

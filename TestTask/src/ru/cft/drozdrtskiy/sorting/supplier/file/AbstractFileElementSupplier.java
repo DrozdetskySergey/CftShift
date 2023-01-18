@@ -1,25 +1,29 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.supplier;
+package ru.cft.drozdrtskiy.sorting.supplier.file;
 
 import org.apache.commons.io.LineIterator;
-import ru.cft.drozdrtskiy22.merge_files_sorting.element.FileElement;
+import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public abstract class FileElementSupplier implements ElementSupplier, AutoCloseable {
+public abstract class AbstractFileElementSupplier implements FileElementSupplier {
 
     protected final LineIterator lineIterator;
     protected final Path path;
     protected int invalidLinesCount;
 
-    protected FileElementSupplier(Path path) throws IOException {
+    protected AbstractFileElementSupplier(Path path) throws IOException {
         lineIterator = new LineIterator(Files.newBufferedReader(path));
         this.path = path;
     }
 
     @Override
     public abstract FileElement next();
+
+    protected boolean isInvalidLine(String line) {
+        return line.isBlank() || line.contains(" ");
+    }
 
     @Override
     public void close() {
@@ -34,9 +38,5 @@ public abstract class FileElementSupplier implements ElementSupplier, AutoClosea
                 System.out.printf("Закрытие файла %s Что-то пошло не так. %s%n", path.getFileName(), e.getMessage());
             }
         }
-    }
-
-    protected boolean isInvalidLine(String line) {
-        return line.isBlank() || line.contains(" ");
     }
 }

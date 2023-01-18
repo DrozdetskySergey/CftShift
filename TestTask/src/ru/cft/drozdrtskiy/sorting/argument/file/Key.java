@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.argument;
+package ru.cft.drozdrtskiy.sorting.argument.file;
 
 enum Key {
 

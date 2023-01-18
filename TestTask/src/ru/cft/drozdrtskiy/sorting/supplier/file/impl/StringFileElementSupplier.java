@@ -1,13 +1,14 @@
-package ru.cft.drozdrtskiy22.merge_files_sorting.supplier;
+package ru.cft.drozdrtskiy.sorting.supplier.file.impl;
 
-import ru.cft.drozdrtskiy22.merge_files_sorting.element.StringFileElement;
+import ru.cft.drozdrtskiy.sorting.element.file.impl.StringFileElement;
+import ru.cft.drozdrtskiy.sorting.supplier.file.AbstractFileElementSupplier;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-public final class StringFileElementSupplier extends FileElementSupplier {
+public final class StringFileElementSupplier extends AbstractFileElementSupplier {
 
-    public static StringFileElementSupplier fromFile(Path path) throws IOException {
+    public static StringFileElementSupplier from(Path path) throws IOException {
         return new StringFileElementSupplier(path);
     }
 
