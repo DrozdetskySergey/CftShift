@@ -2,6 +2,7 @@ package ru.cft.drozdrtskiy.sorting.sorter.file.merge;
 
 import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
+import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.SuppliersElementSelector;
@@ -12,24 +13,25 @@ import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public final class FileSorterByMerge implements Sorter {
 
-    private final SortDirection sortDirection;
-    private final FileElementSupplierFactory fileElementSupplierFactory;
     private final Path outputFile;
     private final List<Path> inputFiles;
+    private final FileElementSupplierFactory fileElementSupplierFactory;
+    private final Comparator<Element> comparator;
 
     public static FileSorterByMerge from(FileSorterArguments arguments) {
         return new FileSorterByMerge(arguments);
     }
 
     private FileSorterByMerge(FileSorterArguments arguments) {
-        this.sortDirection = arguments.getSortDirection();
-        this.fileElementSupplierFactory = FileElementSupplierFactory.from(arguments.getElementType());
         this.outputFile = arguments.getOutputFile();
         this.inputFiles = arguments.getInputFiles();
+        this.fileElementSupplierFactory = FileElementSupplierFactory.from(arguments.getElementType());
+        comparator = arguments.getSortDirection() == SortDirection.DESC ? Comparator.reverseOrder() : Comparator.naturalOrder();
     }
 
     @Override
@@ -46,10 +48,10 @@ public final class FileSorterByMerge implements Sorter {
         }
 
         SuppliersElementSelector elementSelector
-                = SuppliersElementSelector.from(elementSuppliers, sortDirection);
+                = SuppliersElementSelector.from(elementSuppliers, comparator);
 
         try (BufferedWriter fileWriter = Files.newBufferedWriter(outputFile)) {
-            while (elementSelector.getNext()) {
+            while (elementSelector.hasNext()) {
                 FileElement fileElement = (FileElement) elementSelector.next();
                 fileWriter.write(fileElement.toWritableFormat());
             }

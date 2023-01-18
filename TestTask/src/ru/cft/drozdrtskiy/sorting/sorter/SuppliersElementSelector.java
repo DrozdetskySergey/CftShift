@@ -1,6 +1,5 @@
 package ru.cft.drozdrtskiy.sorting.sorter;
 
-import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 
@@ -11,25 +10,25 @@ import java.util.List;
 public final class SuppliersElementSelector {
 
     private final List<ElementSupplier> suppliers;
-    private final List<Element> elements;
     private int size;
+    private final List<Element> elements;
     private final Comparator<Element> comparator;
 
     public static SuppliersElementSelector from(List<ElementSupplier> suppliers
-            , SortDirection sortDirection) throws Exception {
-        return new SuppliersElementSelector(suppliers, sortDirection);
+            , Comparator<Element> comparator) throws Exception {
+        return new SuppliersElementSelector(suppliers, comparator);
     }
 
-    private SuppliersElementSelector(List<ElementSupplier> suppliers, SortDirection sortDirection) throws Exception {
+    private SuppliersElementSelector(List<ElementSupplier> suppliers, Comparator<Element> comparator) throws Exception {
         this.suppliers = suppliers;
         size = suppliers.size();
-        elements = new ArrayList<>(size);
-        comparator = sortDirection == SortDirection.DESC ? Comparator.reverseOrder() : Comparator.naturalOrder();
-
-        readFirstElements();
+        elements = getFirstElements();
+        this.comparator = comparator;
     }
 
-    private void readFirstElements() throws Exception {
+    private List<Element> getFirstElements() throws Exception {
+        List<Element> result = new ArrayList<>(size);
+
         for (int i = 0; i < size; ) {
             Element element = suppliers.get(i).next();
 
@@ -37,19 +36,21 @@ public final class SuppliersElementSelector {
                 closeElementSupplier(suppliers.remove(i));
                 size--;
             } else {
-                elements.add(element);
+                result.add(element);
                 i++;
             }
         }
+
+        return result;
     }
 
-    public boolean getNext() {
+    public boolean hasNext() {
         return size > 0;
     }
 
     public Element next() throws Exception {
         if (size == 0) {
-            throw new IllegalAccessException("Отсутствуют поставщики элементов.");
+            throw new IllegalAccessException("Отсутствует источник элементов.");
         }
 
         Element result = elements.get(0);
@@ -62,12 +63,12 @@ public final class SuppliersElementSelector {
             }
         }
 
-        readNextElementByIndex(index);
+        updateElementOrCloseSupplier(index);
 
         return result;
     }
 
-    private void readNextElementByIndex(int index) throws Exception {
+    private void updateElementOrCloseSupplier(int index) throws Exception {
         Element element = suppliers.get(index).next();
 
         if (element == null) {
