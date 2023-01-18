@@ -9,8 +9,6 @@ import ru.cft.drozdrtskiy.sorting.sorter.file.merge.FileSorterByMerge;
 public final class Main {
 
     public static void main(String[] args) {
-        args = new String[]{"", "", "-w", "-i", "out.txt", "in1.txt", "in2.txt", "in3.txt"};
-
         if (args.length == 0) {
             Message.FILE_SORT_INFO.show();
             Message.FILE_SORT_PARAMS.show();
