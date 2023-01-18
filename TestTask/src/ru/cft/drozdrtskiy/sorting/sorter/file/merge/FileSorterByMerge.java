@@ -20,8 +20,11 @@ public final class FileSorterByMerge implements Sorter {
 
     private final Path outputFile;
     private final List<Path> inputFiles;
+    private final boolean isSkipUnsorted;
     private final FileElementSupplierFactory fileElementSupplierFactory;
     private final Comparator<Element> comparator;
+    private FileElement previousFileElement;
+    private int skippedFileElementCount;
 
     public static FileSorterByMerge from(FileSorterArguments arguments) {
         return new FileSorterByMerge(arguments);
@@ -30,6 +33,7 @@ public final class FileSorterByMerge implements Sorter {
     private FileSorterByMerge(FileSorterArguments arguments) {
         this.outputFile = arguments.getOutputFile();
         this.inputFiles = arguments.getInputFiles();
+        this.isSkipUnsorted = arguments.isSkipUnsorted();
         this.fileElementSupplierFactory = FileElementSupplierFactory.from(arguments.getElementType());
         comparator = arguments.getSortDirection() == SortDirection.DESC ? Comparator.reverseOrder() : Comparator.naturalOrder();
     }
@@ -47,13 +51,28 @@ public final class FileSorterByMerge implements Sorter {
             elementSuppliers.add(fileElementSupplierFactory.create(p));
         }
 
-        SuppliersElementSelector elementSelector
-                = SuppliersElementSelector.from(elementSuppliers, comparator);
+        SuppliersElementSelector elementSelector = SuppliersElementSelector.from(elementSuppliers, comparator);
 
         try (BufferedWriter fileWriter = Files.newBufferedWriter(outputFile)) {
             while (elementSelector.hasNext()) {
                 FileElement fileElement = (FileElement) elementSelector.next();
-                fileWriter.write(fileElement.toWritableFormat());
+
+                if (isSkipUnsorted) {
+                    if (previousFileElement == null || comparator.compare(fileElement, previousFileElement) >= 0) {
+                        fileWriter.write(fileElement.toWritableFormat());
+                        previousFileElement = fileElement;
+                    } else {
+                        skippedFileElementCount++;
+                    }
+                } else {
+                    fileWriter.write(fileElement.toWritableFormat());
+                    previousFileElement = fileElement;
+                }
+            }
+        } finally {
+            if (skippedFileElementCount > 0) {
+                System.out.printf("Были проигнорированны строки нарушающие сортировку в исходных файлах - %d шт.%n"
+                        , skippedFileElementCount);
             }
         }
     }

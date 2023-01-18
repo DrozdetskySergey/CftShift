@@ -20,6 +20,7 @@ public final class FileSorterArguments {
     private List<Path> files;
     private final SortDirection sortDirection;
     private final ElementType elementType;
+    private final boolean isSkipUnsorted;
     private final Path outputFile;
     private final List<Path> inputFiles;
 
@@ -32,6 +33,7 @@ public final class FileSorterArguments {
 
         sortDirection = fetchSortDirection();
         elementType = fetchElementType();
+        isSkipUnsorted = fetchSkipUnsorted();
         outputFile = fetchOutputFile();
         inputFiles = fetchInputFiles();
 
@@ -59,6 +61,9 @@ public final class FileSorterArguments {
         return inputFiles;
     }
 
+    public boolean isSkipUnsorted() {
+        return isSkipUnsorted;
+    }
 
     private void parseArgumentStrings(List<String> arguments) throws ArgsException {
         List<String> validArguments = arguments.stream()
@@ -102,6 +107,10 @@ public final class FileSorterArguments {
         }
 
         return result;
+    }
+
+    private boolean fetchSkipUnsorted() {
+        return keyNotations.contains(Key.SKIP_UNSORTED.notation());
     }
 
     private Path fetchOutputFile() {
