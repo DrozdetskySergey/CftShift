@@ -2,6 +2,7 @@ package ru.cft.drozdrtskiy.sorting.supplier.file;
 
 import org.apache.commons.io.LineIterator;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
+import ru.cft.drozdrtskiy.sorting.util.Writer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,14 +29,16 @@ public abstract class AbstractFileElementSupplier implements FileElementSupplier
     @Override
     public void close() {
         if (invalidLinesCount > 0) {
-            System.out.printf("В файле %s проигнорированны ошибочные строки - %d шт.%n", path.getFileName(), invalidLinesCount);
+            Writer.write(String.format("В файле %s проигнорированны ошибочные строки - %d шт."
+                    , path.getFileName(), invalidLinesCount));
         }
 
         if (lineIterator != null) {
             try {
                 lineIterator.close();
             } catch (IOException e) {
-                System.out.printf("Закрытие файла %s Что-то пошло не так. %s%n", path.getFileName(), e.getMessage());
+                Writer.write(String.format("Закрытие файла %s Что-то пошло не так. %s"
+                        , path.getFileName(), e.getMessage()));
             }
         }
     }

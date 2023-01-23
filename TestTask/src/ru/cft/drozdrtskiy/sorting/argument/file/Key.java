@@ -7,7 +7,7 @@ enum Key {
     STRING_TYPE("-s"),
     INTEGER_TYPE("-i"),
     OVERWRITE_OUTPUT_FILE("-w"),
-    SKIP_UNSORTED("-n");
+    IGNORE_UNSORTED("-n");
 
     private final String notation;
 

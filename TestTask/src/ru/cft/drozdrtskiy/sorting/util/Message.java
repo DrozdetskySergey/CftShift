@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.message;
+package ru.cft.drozdrtskiy.sorting.util;
 
 public enum Message {
 
@@ -8,7 +8,7 @@ public enum Message {
             "Строки могут содержать любые не пробельные символы, строки с пробелами считаются ошибочными.%n" +
             "Также считается, что файлы предварительно отсортированы.%n")),
     FILE_SORT_PARAMS(String.format(
-            "Параметры: (-a | -d) [-s | -i] (-w) (-n) [имя выходного файла] [имя входного файла №1]..%n")),
+            "Параметры: (-a | -d) [-s | -i] (-w) (-n) [имя выходного файла] [имя входного файла №1]..")),
     FILE_SORT_KEYS(String.format(
             "  -a  сортировка по возростанию (по умолчанию).%n" +
             "  -d  сортировка по убыванию.%n" +
@@ -24,6 +24,6 @@ public enum Message {
     }
 
     public void show() {
-        System.out.println(text);
+        Writer.write(text);
     }
 }

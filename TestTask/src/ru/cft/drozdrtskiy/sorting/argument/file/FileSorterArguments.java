@@ -20,7 +20,7 @@ public final class FileSorterArguments {
     private List<Path> files;
     private final SortDirection sortDirection;
     private final ElementType elementType;
-    private final boolean isSkipUnsorted;
+    private final boolean isIgnoreUnsorted;
     private final Path outputFile;
     private final List<Path> inputFiles;
 
@@ -33,7 +33,7 @@ public final class FileSorterArguments {
 
         sortDirection = fetchSortDirection();
         elementType = fetchElementType();
-        isSkipUnsorted = fetchSkipUnsorted();
+        isIgnoreUnsorted = fetchIgnoreUnsorted();
         outputFile = fetchOutputFile();
         inputFiles = fetchInputFiles();
 
@@ -61,8 +61,8 @@ public final class FileSorterArguments {
         return inputFiles;
     }
 
-    public boolean isSkipUnsorted() {
-        return isSkipUnsorted;
+    public boolean isIgnoreUnsorted() {
+        return isIgnoreUnsorted;
     }
 
     private void parseArgumentStrings(List<String> arguments) throws ArgsException {
@@ -109,8 +109,8 @@ public final class FileSorterArguments {
         return result;
     }
 
-    private boolean fetchSkipUnsorted() {
-        return keyNotations.contains(Key.SKIP_UNSORTED.notation());
+    private boolean fetchIgnoreUnsorted() {
+        return keyNotations.contains(Key.IGNORE_UNSORTED.notation());
     }
 
     private Path fetchOutputFile() {
@@ -126,7 +126,8 @@ public final class FileSorterArguments {
     }
 
     private void checkArgsValidity() throws ArgsException {
-        if (sortDirection == null || elementType == null || outputFile == null || inputFiles.isEmpty()) {
+        if (sortDirection == null || elementType == null || outputFile == null
+                || inputFiles == null || inputFiles.isEmpty()) {
             throw new ArgsException("Необходимые параметры не указаны.");
         }
     }
@@ -136,12 +137,12 @@ public final class FileSorterArguments {
                 .map(Key::notation)
                 .collect(Collectors.toList());
 
-        String incorrectKeyNotations = keyNotations.stream()
+        String joinedIncorrectKeyNotations = keyNotations.stream()
                 .filter(Predicate.not(correctKeyNotations::contains))
                 .collect(Collectors.joining("], [", "[", "]"));
 
-        if (!incorrectKeyNotations.equals("[]")) {
-            throw new ArgsException(String.format("Не известные параметры: %s", incorrectKeyNotations));
+        if (!joinedIncorrectKeyNotations.equals("[]")) {
+            throw new ArgsException(String.format("Не известные параметры: %s", joinedIncorrectKeyNotations));
         }
     }
 
