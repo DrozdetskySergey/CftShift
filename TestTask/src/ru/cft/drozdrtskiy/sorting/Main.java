@@ -2,6 +2,7 @@ package ru.cft.drozdrtskiy.sorting;
 
 import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
 import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
+import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.file.merge.FileSorterByMerge;
 import ru.cft.drozdrtskiy.sorting.util.Message;
 import ru.cft.drozdrtskiy.sorting.util.Writer;
@@ -28,6 +29,7 @@ public final class Main {
             return;
         }
 
-        FileSorterByMerge.from(fileSorterArguments).sort();
+        Sorter sorter = FileSorterByMerge.from(fileSorterArguments);
+        sorter.sort();
     }
 }

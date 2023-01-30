@@ -5,4 +5,7 @@ import ru.cft.drozdrtskiy.sorting.element.Element;
 public interface FileElement extends Element {
 
     String toWritableFormat();
+
+    @Override
+    int compareTo(Element o);
 }

@@ -19,12 +19,12 @@ public abstract class AbstractFileElementSupplier implements FileElementSupplier
         this.path = path;
     }
 
-    @Override
-    public abstract FileElement next();
-
     protected boolean isInvalidLine(String line) {
         return line.isBlank() || line.contains(" ");
     }
+
+    @Override
+    public abstract FileElement next();
 
     @Override
     public void close() {
@@ -37,7 +37,7 @@ public abstract class AbstractFileElementSupplier implements FileElementSupplier
             try {
                 lineIterator.close();
             } catch (IOException e) {
-                Writer.write(String.format("Закрытие файла %s Что-то пошло не так. %s"
+                Writer.write(String.format("Сбой закрытие потока из входного файла %s. %s"
                         , path.getFileName(), e.getMessage()));
             }
         }

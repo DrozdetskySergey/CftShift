@@ -11,7 +11,7 @@ public final class ElementSelector {
 
     private final List<ElementSupplier> suppliers;
     private int size;
-    private final List<Element> onePerSupplierElements;
+    private final List<Element> oneFromEachSupplierElements;
     private final Comparator<Element> comparator;
 
     public static ElementSelector from(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
@@ -21,7 +21,7 @@ public final class ElementSelector {
     private ElementSelector(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
         this.suppliers = new ArrayList<>(suppliers);
         size = suppliers.size();
-        onePerSupplierElements = getFirstElementsFromSuppliers();
+        oneFromEachSupplierElements = getFirstElementsFromSuppliers();
         this.comparator = comparator;
     }
 
@@ -49,15 +49,15 @@ public final class ElementSelector {
 
     public Element next() throws IllegalAccessException {
         if (size == 0) {
-            throw new IllegalAccessException("Отсутствует источник элементов.");
+            throw new IllegalAccessException("Отсутствует постовщик элементов.");
         }
 
-        Element result = onePerSupplierElements.get(0);
+        Element result = oneFromEachSupplierElements.get(0);
         int index = 0;
 
         for (int i = 1; i < size; i++) {
-            if (comparator.compare(result, onePerSupplierElements.get(i)) > 0) {
-                result = onePerSupplierElements.get(i);
+            if (comparator.compare(result, oneFromEachSupplierElements.get(i)) > 0) {
+                result = oneFromEachSupplierElements.get(i);
                 index = i;
             }
         }
@@ -71,10 +71,10 @@ public final class ElementSelector {
         Element element = suppliers.get(index).next();
 
         if (element != null) {
-            onePerSupplierElements.set(index, element);
+            oneFromEachSupplierElements.set(index, element);
         } else {
             suppliers.remove(index);
-            onePerSupplierElements.remove(index);
+            oneFromEachSupplierElements.remove(index);
             size--;
         }
     }

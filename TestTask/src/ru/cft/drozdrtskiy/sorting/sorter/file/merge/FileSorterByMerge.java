@@ -22,7 +22,7 @@ public final class FileSorterByMerge implements Sorter {
 
     private final Path outputFile;
     private final List<Path> inputFiles;
-    private final boolean isIgnoreUnsorted;
+    private final boolean isUnsortedFileElementsIgnore;
     private final FileElementSupplierFactory fileElementSupplierFactory;
     private final Comparator<Element> comparator;
     private int IgnoredFileElementCount;
@@ -35,7 +35,7 @@ public final class FileSorterByMerge implements Sorter {
     private FileSorterByMerge(FileSorterArguments arguments) {
         this.outputFile = arguments.getOutputFile();
         this.inputFiles = arguments.getInputFiles();
-        this.isIgnoreUnsorted = arguments.isIgnoreUnsorted();
+        this.isUnsortedFileElementsIgnore = arguments.isUnsortedFileElementsIgnore();
         this.fileElementSupplierFactory = FileElementSupplierFactory.from(arguments.getElementType());
         comparator = arguments.getSortDirection() == SortDirection.DESC ?
                 Comparator.reverseOrder() : Comparator.naturalOrder();
@@ -59,7 +59,8 @@ public final class FileSorterByMerge implements Sorter {
                 elementSuppliers.add(fileElementSupplierFactory.create(inputFile));
             }
 
-            useSelectorToWriteOutputFile(ElementSelector.from(elementSuppliers, comparator));
+            ElementSelector elementSelectorWithComparator = ElementSelector.from(elementSuppliers, comparator);
+            useElementSelectorToWriteOutputFile(elementSelectorWithComparator);
         } finally {
             closeElementSuppliers(elementSuppliers);
         }
@@ -71,17 +72,17 @@ public final class FileSorterByMerge implements Sorter {
                 try {
                     supplier.close();
                 } catch (Exception e) {
-                    Writer.write(String.format("Сбой завершения работы с входным файлом. %s", e.getMessage()));
+                    Writer.write(String.format("Сбой закрытия потока (входного файла). %s", e.getMessage()));
                 }
             }
         }
     }
 
-    private void useSelectorToWriteOutputFile(ElementSelector elementSelector) throws IOException {
+    private void useElementSelectorToWriteOutputFile(ElementSelector elementSelector) throws IOException {
         try (BufferedWriter outputFileWriter = Files.newBufferedWriter(outputFile)) {
             while (elementSelector.hasNext()) {
                 FileElement fileElement = (FileElement) elementSelector.next();
-                writeNextElementToFileOrIgnoreUnsorted(fileElement, outputFileWriter);
+                writeNextElementToFileOrIgnore(fileElement, outputFileWriter);
             }
         } catch (IllegalAccessException e) {
             Writer.write(String.format("%s", e.getMessage()));
@@ -93,9 +94,9 @@ public final class FileSorterByMerge implements Sorter {
         }
     }
 
-    private void writeNextElementToFileOrIgnoreUnsorted(FileElement fileElement, BufferedWriter fileWriter)
+    private void writeNextElementToFileOrIgnore(FileElement fileElement, BufferedWriter fileWriter)
             throws IOException {
-        if (isIgnoreUnsorted) {
+        if (isUnsortedFileElementsIgnore) {
             if (previousFileElement == null || comparator.compare(fileElement, previousFileElement) >= 0) {
                 fileWriter.write(fileElement.toWritableFormat());
                 previousFileElement = fileElement;
