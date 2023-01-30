@@ -1,11 +1,11 @@
-package ru.cft.drozdrtskiy.sorting.sorter.file.merge;
+package ru.cft.drozdrtskiy.sorting.sorter.file.by_merge;
 
 import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
-import ru.cft.drozdrtskiy.sorting.sorter.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
+import ru.cft.drozdrtskiy.sorting.sorter.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.supplier.file.FileElementSupplierFactory;
 import ru.cft.drozdrtskiy.sorting.util.Writer;
@@ -96,16 +96,13 @@ public final class FileSorterByMerge implements Sorter {
 
     private void writeNextElementToFileOrIgnore(FileElement fileElement, BufferedWriter fileWriter)
             throws IOException {
-        if (isUnsortedFileElementsIgnore) {
-            if (previousFileElement == null || comparator.compare(fileElement, previousFileElement) >= 0) {
-                fileWriter.write(fileElement.toWritableFormat());
-                previousFileElement = fileElement;
-            } else {
-                IgnoredFileElementCount++;
-            }
-        } else {
+        if (!isUnsortedFileElementsIgnore) {
+            fileWriter.write(fileElement.toWritableFormat());
+        } else if (previousFileElement == null || comparator.compare(fileElement, previousFileElement) >= 0) {
             fileWriter.write(fileElement.toWritableFormat());
             previousFileElement = fileElement;
+        } else {
+            IgnoredFileElementCount++;
         }
     }
 }
