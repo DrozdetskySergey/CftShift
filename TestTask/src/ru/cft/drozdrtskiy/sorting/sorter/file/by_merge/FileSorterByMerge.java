@@ -82,7 +82,7 @@ public final class FileSorterByMerge implements Sorter {
         try (BufferedWriter outputFileWriter = Files.newBufferedWriter(outputFile)) {
             while (elementSelector.hasNext()) {
                 FileElement fileElement = (FileElement) elementSelector.next();
-                writeNextElementToFileOrIgnore(fileElement, outputFileWriter);
+                writeFileElementToFileOrIgnore(fileElement, outputFileWriter);
             }
         } catch (IllegalAccessException e) {
             Writer.write(String.format("Неожиданная потеря доступа до элементов. %s", e.getMessage()));
@@ -94,7 +94,7 @@ public final class FileSorterByMerge implements Sorter {
         }
     }
 
-    private void writeNextElementToFileOrIgnore(FileElement fileElement, BufferedWriter fileWriter) throws IOException {
+    private void writeFileElementToFileOrIgnore(FileElement fileElement, BufferedWriter fileWriter) throws IOException {
         if (!isUnsortedFileElementsIgnore) {
             fileWriter.write(fileElement.toWritableFormat());
         } else if (previousFileElement == null || comparator.compare(fileElement, previousFileElement) >= 0) {
