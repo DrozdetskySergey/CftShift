@@ -169,9 +169,9 @@ public final class FileSorterArguments {
     }
 
     private void checkInputFilesIsReadable() throws ArgsException {
-        for (Path p : inputFiles) {
-            if (!Files.isReadable(p)) {
-                throw new ArgsException(String.format("Входящий файл %s недоступен для чтения.", p.getFileName()));
+        for (Path file : inputFiles) {
+            if (!Files.isReadable(file)) {
+                throw new ArgsException(String.format("Входящий файл %s недоступен для чтения.", file.getFileName()));
             }
         }
     }

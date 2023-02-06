@@ -55,8 +55,8 @@ public final class FileSorterByMerge implements Sorter {
         List<ElementSupplier> elementSuppliers = new ArrayList<>(inputFiles.size());
 
         try {
-            for (Path inputFile : inputFiles) {
-                elementSuppliers.add(fileElementSupplierFactory.create(inputFile));
+            for (Path file : inputFiles) {
+                elementSuppliers.add(fileElementSupplierFactory.create(file));
             }
 
             ElementSelector elementSelectorWithComparator = ElementSelector.from(elementSuppliers, comparator);
@@ -85,7 +85,7 @@ public final class FileSorterByMerge implements Sorter {
                 writeNextElementToFileOrIgnore(fileElement, outputFileWriter);
             }
         } catch (IllegalAccessException e) {
-            Writer.write(String.format("%s", e.getMessage()));
+            Writer.write(String.format("Неожиданная потеря доступа до элементов. %s", e.getMessage()));
         } finally {
             if (IgnoredFileElementCount > 0) {
                 Writer.write(String.format("Были проигнорированны строки нарушающие сортировку "
@@ -94,8 +94,7 @@ public final class FileSorterByMerge implements Sorter {
         }
     }
 
-    private void writeNextElementToFileOrIgnore(FileElement fileElement, BufferedWriter fileWriter)
-            throws IOException {
+    private void writeNextElementToFileOrIgnore(FileElement fileElement, BufferedWriter fileWriter) throws IOException {
         if (!isUnsortedFileElementsIgnore) {
             fileWriter.write(fileElement.toWritableFormat());
         } else if (previousFileElement == null || comparator.compare(fileElement, previousFileElement) >= 0) {

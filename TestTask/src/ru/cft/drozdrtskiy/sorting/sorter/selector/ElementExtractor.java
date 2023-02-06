@@ -3,16 +3,16 @@ package ru.cft.drozdrtskiy.sorting.sorter.selector;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 
-final class Node {
+final class ElementExtractor {
 
     private final ElementSupplier elementSupplier;
     private Element element;
 
-    public static Node from(ElementSupplier elementSupplier) {
-        return new Node(elementSupplier);
+    public static ElementExtractor from(ElementSupplier elementSupplier) {
+        return new ElementExtractor(elementSupplier);
     }
 
-    public Node(ElementSupplier elementSupplier) {
+    public ElementExtractor(ElementSupplier elementSupplier) {
         this.elementSupplier = elementSupplier;
         element = elementSupplier.next();
     }

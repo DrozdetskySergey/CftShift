@@ -9,8 +9,7 @@ import java.util.List;
 
 public final class ElementSelector {
 
-    private int nodeCount;
-    private List<Node> nodes;
+    private List<ElementExtractor> elementExtractors;
     private final Comparator<Element> comparator;
 
     public static ElementSelector from(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
@@ -18,56 +17,54 @@ public final class ElementSelector {
     }
 
     private ElementSelector(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
-        createNodes(suppliers);
-        nodeCount = nodes.size();
+        createElementExtractors(suppliers);
         this.comparator = comparator;
     }
 
-    private void createNodes(List<ElementSupplier> suppliers) {
-        nodes = new ArrayList<>(suppliers.size());
+    private void createElementExtractors(List<ElementSupplier> suppliers) {
+        elementExtractors = new ArrayList<>(suppliers.size());
 
         for (ElementSupplier supplier : suppliers) {
-            Node newNode = Node.from(supplier);
+            ElementExtractor elementExtractor = ElementExtractor.from(supplier);
 
-            if (newNode.getElement() != null) {
-                nodes.add(newNode);
+            if (elementExtractor.getElement() != null) {
+                elementExtractors.add(elementExtractor);
             }
         }
     }
 
     public boolean hasNext() {
-        return nodeCount > 0;
+        return elementExtractors.size() > 0;
     }
 
     public Element next() throws IllegalAccessException {
-        if (nodeCount == 0) {
+        if (elementExtractors.size() == 0) {
             throw new IllegalAccessException("Отсутствует постовщик элементов.");
         }
 
-        Element element = nodes.get(0).getElement();
-        int nodeIndex = 0;
+        Element element = elementExtractors.get(0).getElement();
+        int elementExtractorIndex = 0;
 
-        for (int i = 1; i < nodeCount; i++) {
-            Element nextElement = nodes.get(i).getElement();
+        for (int i = 1; i < elementExtractors.size(); i++) {
+            Element nextElement = elementExtractors.get(i).getElement();
 
             if (comparator.compare(element, nextElement) > 0) {
                 element = nextElement;
-                nodeIndex = i;
+                elementExtractorIndex = i;
             }
         }
 
-        updateOrRemoveNode(nodeIndex);
+        updateOrRemoveElementExtractor(elementExtractorIndex);
 
         return element;
     }
 
-    private void updateOrRemoveNode(int index) {
-        Node node = nodes.get(index);
-        node.update();
+    private void updateOrRemoveElementExtractor(int index) {
+        ElementExtractor elementExtractor = elementExtractors.get(index);
+        elementExtractor.update();
 
-        if (node.getElement() == null) {
-            nodes.remove(index);
-            nodeCount--;
+        if (elementExtractor.getElement() == null) {
+            elementExtractors.remove(index);
         }
     }
 }
