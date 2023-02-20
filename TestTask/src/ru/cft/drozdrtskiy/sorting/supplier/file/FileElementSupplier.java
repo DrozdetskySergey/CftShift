@@ -9,5 +9,5 @@ public interface FileElementSupplier extends ElementSupplier {
     FileElement next();
 
     @Override
-    void close();
+    void close() throws Exception;
 }

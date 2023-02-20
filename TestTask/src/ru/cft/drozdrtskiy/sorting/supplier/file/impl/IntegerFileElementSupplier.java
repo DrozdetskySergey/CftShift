@@ -22,7 +22,7 @@ public final class IntegerFileElementSupplier extends AbstractFileElementSupplie
             String line = lineIterator.nextLine();
 
             if (isInvalidLine(line)) {
-                invalidLinesCount++;
+                invalidFileElementCount++;
                 continue;
             }
 
@@ -30,7 +30,7 @@ public final class IntegerFileElementSupplier extends AbstractFileElementSupplie
 
                 return new IntegerFileElement(Integer.valueOf(line));
             } catch (NumberFormatException e) {
-                invalidLinesCount++;
+                invalidFileElementCount++;
             }
         }
 

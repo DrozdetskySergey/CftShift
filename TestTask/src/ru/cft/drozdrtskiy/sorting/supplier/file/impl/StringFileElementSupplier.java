@@ -22,7 +22,7 @@ public final class StringFileElementSupplier extends AbstractFileElementSupplier
             String line = lineIterator.nextLine();
 
             if (isInvalidLine(line)) {
-                invalidLinesCount++;
+                invalidFileElementCount++;
                 continue;
             }
 

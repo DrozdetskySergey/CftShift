@@ -1,6 +1,7 @@
 package ru.cft.drozdrtskiy.sorting;
 
-import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
+import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
+import ru.cft.drozdrtskiy.sorting.argument.ArgumentsException;
 import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.file.by_merge.FileSorterByMerge;
@@ -23,14 +24,15 @@ public final class Main {
 
         try {
             fileSorterArguments = FileSorterArguments.from(args);
-        } catch (ArgsException e) {
+        } catch (ArgumentsException e) {
             Writer.write(e.getMessage());
             Writer.write(FILE_SORT_PARAMS);
 
             return;
         }
 
-        Sorter sorter = FileSorterByMerge.from(fileSorterArguments);
+        FileSorterArgumentsDTO fileSorterArgumentsDTO = fileSorterArguments.getDTO();
+        Sorter sorter = FileSorterByMerge.from(fileSorterArgumentsDTO);
         sorter.sort();
     }
 }

@@ -2,7 +2,6 @@ package ru.cft.drozdrtskiy.sorting.supplier.file;
 
 import org.apache.commons.io.LineIterator;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
-import ru.cft.drozdrtskiy.sorting.util.Writer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +11,7 @@ public abstract class AbstractFileElementSupplier implements FileElementSupplier
 
     protected final LineIterator lineIterator;
     protected final Path path;
-    protected int invalidLinesCount;
+    protected int invalidFileElementCount;
 
     protected AbstractFileElementSupplier(Path path) throws IOException {
         lineIterator = new LineIterator(Files.newBufferedReader(path));
@@ -27,19 +26,24 @@ public abstract class AbstractFileElementSupplier implements FileElementSupplier
     public abstract FileElement next();
 
     @Override
-    public void close() {
-        if (invalidLinesCount > 0) {
-            Writer.write(String.format("В файле %s проигнорированны ошибочные строки - %d шт."
-                    , path.getFileName(), invalidLinesCount));
+    public void close() throws Exception {
+        StringBuilder exceptionMessage = new StringBuilder();
+
+        if (invalidFileElementCount > 0) {
+            exceptionMessage.append(String.format("Файл %s. Проигнорированно ошибочных строк - %d шт. "
+                    , path.getFileName(), invalidFileElementCount));
         }
 
         if (lineIterator != null) {
             try {
                 lineIterator.close();
             } catch (IOException e) {
-                Writer.write(String.format("Сбой закрытие потока из входного файла %s. %s"
-                        , path.getFileName(), e.getMessage()));
+                exceptionMessage.append(String.format("Сбой закрытия потока чтения. %s", e.getMessage()));
             }
+        }
+
+        if (exceptionMessage.length() > 0) {
+            throw new Exception(exceptionMessage.toString());
         }
     }
 }
