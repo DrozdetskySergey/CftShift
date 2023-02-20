@@ -9,13 +9,13 @@ enum Key {
     OVERWRITE_OUTPUT_FILE("-w"),
     IGNORE_UNSORTED("-n");
 
-    private final String notation;
+    final String key;
 
-    Key(String notation) {
-        this.notation = notation;
+    Key(String key) {
+        this.key = key;
     }
 
-    public String notation() {
-        return notation;
+    public String key() {
+        return key;
     }
 }

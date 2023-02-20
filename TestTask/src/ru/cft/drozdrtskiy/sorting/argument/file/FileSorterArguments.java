@@ -1,35 +1,32 @@
 package ru.cft.drozdrtskiy.sorting.argument.file;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
-import ru.cft.drozdrtskiy.sorting.argument.ArgumentsException;
+import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
 import ru.cft.drozdrtskiy.sorting.argument.ElementType;
 import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.nio.file.*;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static ru.cft.drozdrtskiy.sorting.argument.file.Key.*;
+
 public final class FileSorterArguments {
 
-    private List<String> keyNotations;
+    private List<String> keys;
     private List<Path> files;
     private final SortDirection sortDirection;
     private final ElementType elementType;
     private final Path outputFile;
     private final List<Path> inputFiles;
 
-    public static FileSorterArguments from(String[] args) throws ArgumentsException {
+    public static FileSorterArguments from(String[] args) throws ArgsException {
         return new FileSorterArguments(Arrays.asList(args));
     }
 
-    private FileSorterArguments(List<String> strings) throws ArgumentsException {
+    private FileSorterArguments(List<String> strings) throws ArgsException {
         parseArgumentStrings(strings);
 
         sortDirection = fetchSortDirection();
@@ -42,10 +39,10 @@ public final class FileSorterArguments {
         checkKeysDoNotConflict();
         checkOutputFileNotMatchesWithInputFile();
         checkInputFilesIsReadable();
-        checkOutputFileIsWritable();
+        checkOutputFileCanBeWritten();
     }
 
-    public FileSorterArgumentsDTO getDTO() {
+    public FileSorterArgumentsDTO createDTO() {
         FileSorterArgumentsDTO DTO = new FileSorterArgumentsDTO();
 
         DTO.sortDirection = sortDirection;
@@ -59,14 +56,14 @@ public final class FileSorterArguments {
         return DTO;
     }
 
-    private void parseArgumentStrings(List<String> strings) throws ArgumentsException {
+    private void parseArgumentStrings(List<String> strings) throws ArgsException {
         List<String> validArguments = strings.stream()
                 .filter(Objects::nonNull)
                 .filter(Predicate.not(String::isBlank))
                 .map(String::strip)
                 .collect(Collectors.toList());
 
-        keyNotations = validArguments.stream()
+        keys = validArguments.stream()
                 .filter(s -> s.startsWith("-"))
                 .collect(Collectors.toList());
 
@@ -76,7 +73,7 @@ public final class FileSorterArguments {
                     .map(Paths::get)
                     .collect(Collectors.toList());
         } catch (InvalidPathException e) {
-            throw new ArgumentsException(String.format("Не допустимое имя файла. %s", e.getMessage()));
+            throw new ArgsException(String.format("Не допустимое имя файла. %s", e.getMessage()));
         }
 
     }
@@ -84,7 +81,7 @@ public final class FileSorterArguments {
     private SortDirection fetchSortDirection() {
         SortDirection result = SortDirection.ASC;
 
-        if (keyNotations.contains(Key.DESCENDING_ORDER.notation())) {
+        if (keys.contains(DESCENDING_ORDER.key)) {
             result = SortDirection.DESC;
         }
 
@@ -94,17 +91,13 @@ public final class FileSorterArguments {
     private ElementType fetchElementType() {
         ElementType result = null;
 
-        if (keyNotations.contains(Key.STRING_TYPE.notation())) {
+        if (keys.contains(STRING_TYPE.key)) {
             result = ElementType.STRING;
-        } else if (keyNotations.contains(Key.INTEGER_TYPE.notation())) {
+        } else if (keys.contains(INTEGER_TYPE.key)) {
             result = ElementType.INTEGER;
         }
 
         return result;
-    }
-
-    private boolean fetchUnsortedFileElementsIgnore() {
-        return keyNotations.contains(Key.IGNORE_UNSORTED.notation());
     }
 
     private Path fetchOutputFile() {
@@ -119,79 +112,85 @@ public final class FileSorterArguments {
                 .collect(Collectors.toList());
     }
 
-    private void checkAvailabilityAllArguments() throws ArgumentsException {
-        if (sortDirection == null || elementType == null || outputFile == null
-                || inputFiles == null || inputFiles.isEmpty()) {
-            throw new ArgumentsException("Необходимые параметры не указаны.");
+    private boolean fetchUnsortedFileElementsIgnore() {
+        return keys.contains(IGNORE_UNSORTED.key);
+    }
+
+    private void checkAvailabilityAllArguments() throws ArgsException {
+        if (sortDirection == null || elementType == null || outputFile == null || inputFiles.isEmpty()) {
+            throw new ArgsException("Необходимые аргументы не указаны.");
         }
     }
 
-    private void checkKeysCorrect() throws ArgumentsException {
-        List<String> correctKeyNotations = Arrays.stream(Key.values())
-                .map(Key::notation)
+    private void checkKeysCorrect() throws ArgsException {
+        List<String> allowedKeys = Arrays.stream(Key.values())
+                .map(Key::key)
                 .collect(Collectors.toList());
 
-        String joinedIncorrectKeyNotations = keyNotations.stream()
-                .filter(Predicate.not(correctKeyNotations::contains))
+        String unknownKeysJoining = keys.stream()
+                .filter(Predicate.not(allowedKeys::contains))
                 .collect(Collectors.joining("], [", "[", "]"));
 
-        if (!joinedIncorrectKeyNotations.equals("[]")) {
-            throw new ArgumentsException(String.format("Не известные параметры: %s", joinedIncorrectKeyNotations));
+        boolean hasUnknownKeys = !unknownKeysJoining.equals("[]");
+
+        if (hasUnknownKeys) {
+            throw new ArgsException(String.format("Не известные параметры: %s", unknownKeysJoining));
         }
     }
 
-    private void checkKeysDoNotConflict() throws ArgumentsException {
-        if (keyNotations.contains(Key.ASCENDING_ORDER.notation())
-                && keyNotations.contains(Key.DESCENDING_ORDER.notation())) {
-            throw new ArgumentsException(String.format("Конфликт параметров. (%s либо %s)"
-                    , Key.ASCENDING_ORDER.notation(), Key.DESCENDING_ORDER.notation()));
+    private void checkKeysDoNotConflict() throws ArgsException {
+        if (keys.contains(ASCENDING_ORDER.key) && keys.contains(DESCENDING_ORDER.key)) {
+            throw new ArgsException(String.format("Конфликт параметров. (%s либо %s)", ASCENDING_ORDER.key, DESCENDING_ORDER.key));
         }
 
-        if (keyNotations.contains(Key.STRING_TYPE.notation())
-                && keyNotations.contains(Key.INTEGER_TYPE.notation())) {
-            throw new ArgumentsException(String.format("Конфликт параметров. [%s либо %s]"
-                    , Key.STRING_TYPE.notation(), Key.INTEGER_TYPE.notation()));
+        if (keys.contains(STRING_TYPE.key) && keys.contains(INTEGER_TYPE.key)) {
+            throw new ArgsException(String.format("Конфликт параметров. [%s либо %s]", STRING_TYPE.key, INTEGER_TYPE.key));
         }
     }
 
-    private void checkOutputFileNotMatchesWithInputFile() throws ArgumentsException {
+    private void checkOutputFileNotMatchesWithInputFile() throws ArgsException {
         if (inputFiles.contains(outputFile)) {
-            throw new ArgumentsException(String.format("Совпадение имён входного файла %s и файла для результата."
-                    , outputFile));
+            throw new ArgsException(String.format("Совпадение имён входного файла %s и файла для результата.", outputFile));
         }
     }
 
-    private void checkInputFilesIsReadable() throws ArgumentsException {
+    private void checkInputFilesIsReadable() throws ArgsException {
         for (Path file : inputFiles) {
-            if (!Files.isReadable(file)) {
-                throw new ArgumentsException(String.format("Входящий файл %s недоступен для чтения.", file.getFileName()));
+            boolean isFileNotReadable = !Files.isReadable(file);
+
+            if (isFileNotReadable) {
+                throw new ArgsException(String.format("Входящий файл %s недоступен для чтения.", file.getFileName()));
             }
         }
     }
 
-    private void checkOutputFileIsWritable() throws ArgumentsException {
+    private void checkOutputFileCanBeWritten() throws ArgsException {
         if (Files.exists(outputFile)) {
             checkOutputFileCanBeOverwritten();
         } else {
             createOutputFile();
         }
 
-        if (!Files.isWritable(outputFile)) {
-            throw new ArgumentsException(String.format("Файл %s не может быть записан.", outputFile.getFileName()));
+        boolean isFileNotWritable = !Files.isWritable(outputFile);
+
+        if (isFileNotWritable) {
+            throw new ArgsException(String.format("Файл %s не может быть записан.", outputFile.getFileName()));
         }
     }
 
-    private void checkOutputFileCanBeOverwritten() throws ArgumentsException {
-        if (!keyNotations.contains(Key.OVERWRITE_OUTPUT_FILE.notation())) {
-            throw new ArgumentsException(String.format("Файл %s уже существует.", outputFile.getFileName()));
+    private void checkOutputFileCanBeOverwritten() throws ArgsException {
+        boolean isNotHaveKeyToOverwriteOutputFile = !keys.contains(OVERWRITE_OUTPUT_FILE.key);
+
+        if (isNotHaveKeyToOverwriteOutputFile) {
+            throw new ArgsException(String.format("Файл %s уже существует.", outputFile.getFileName()));
         }
     }
 
-    private void createOutputFile() throws ArgumentsException {
+    private void createOutputFile() throws ArgsException {
         try {
             Files.createFile(outputFile);
         } catch (IOException e) {
-            throw new ArgumentsException(String.format("Не удалось создать файл %s. %s"
+            throw new ArgsException(String.format("Не удалось создать файл %s. %s"
                     , outputFile.getFileName(), e.getMessage()));
         }
     }
