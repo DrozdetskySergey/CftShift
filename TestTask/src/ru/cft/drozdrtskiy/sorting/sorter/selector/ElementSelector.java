@@ -3,9 +3,7 @@ package ru.cft.drozdrtskiy.sorting.sorter.selector;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public final class ElementSelector {
 
@@ -42,14 +40,16 @@ public final class ElementSelector {
             throw new IllegalAccessException("Отсутствует постовщик элементов.");
         }
 
-        Element element = elementExtractors.get(0).getElement();
+        ElementExtractor firstExtractor = elementExtractors.get(0);
+        Element element = firstExtractor.getElement();
         int elementExtractorIndex = 0;
 
         for (int i = 1; i < elementExtractors.size(); i++) {
-            Element nextElement = elementExtractors.get(i).getElement();
+            ElementExtractor anotherExtractor = elementExtractors.get(i);
+            Element anotherElement = anotherExtractor.getElement();
 
-            if (comparator.compare(element, nextElement) > 0) {
-                element = nextElement;
+            if (comparator.compare(element, anotherElement) > 0) {
+                element = anotherElement;
                 elementExtractorIndex = i;
             }
         }
