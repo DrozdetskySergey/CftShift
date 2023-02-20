@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.util;
 
-public enum Message {
+public enum Message implements CharSequence {
 
     FILE_SORT_INFO(String.format(
             "Программа сортирует несколько файлов слиянием. Входные файлы содержат данные одного из двух видов:%n" +
@@ -22,7 +22,23 @@ public enum Message {
         this.text = text;
     }
 
-    public void show() {
-        Writer.write(text);
+    @Override
+    public int length() {
+        return text.length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return text.charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return text.substring(start, end);
+    }
+
+    @Override
+    public String toString() {
+        return text;
     }
 }
