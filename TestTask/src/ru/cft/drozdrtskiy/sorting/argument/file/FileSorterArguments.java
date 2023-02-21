@@ -75,7 +75,6 @@ public final class FileSorterArguments {
         } catch (InvalidPathException e) {
             throw new ArgsException(String.format("Не допустимое имя файла. %s", e.getMessage()));
         }
-
     }
 
     private SortDirection fetchSortDirection() {

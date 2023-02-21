@@ -12,7 +12,7 @@ final class ElementExtractor {
         return new ElementExtractor(elementSupplier);
     }
 
-    public ElementExtractor(ElementSupplier elementSupplier) {
+    private ElementExtractor(ElementSupplier elementSupplier) {
         this.elementSupplier = elementSupplier;
         element = elementSupplier.next();
     }
