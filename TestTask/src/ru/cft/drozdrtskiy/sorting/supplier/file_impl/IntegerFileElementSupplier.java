@@ -1,6 +1,6 @@
-package ru.cft.drozdrtskiy.sorting.supplier.file.impl;
+package ru.cft.drozdrtskiy.sorting.supplier.file_impl;
 
-import ru.cft.drozdrtskiy.sorting.element.file.impl.IntegerFileElement;
+import ru.cft.drozdrtskiy.sorting.element.file_impl.IntegerFileElement;
 
 import java.io.IOException;
 import java.nio.file.Path;

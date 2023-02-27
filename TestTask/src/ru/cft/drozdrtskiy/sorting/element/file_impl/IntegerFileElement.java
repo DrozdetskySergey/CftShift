@@ -1,7 +1,6 @@
-package ru.cft.drozdrtskiy.sorting.element.file.impl;
+package ru.cft.drozdrtskiy.sorting.element.file_impl;
 
 import ru.cft.drozdrtskiy.sorting.element.Element;
-import ru.cft.drozdrtskiy.sorting.element.file.AbstractFileElement;
 
 public final class IntegerFileElement extends AbstractFileElement<Integer> {
 

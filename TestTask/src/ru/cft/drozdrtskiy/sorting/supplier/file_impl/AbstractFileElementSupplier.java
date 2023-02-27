@@ -1,14 +1,13 @@
-package ru.cft.drozdrtskiy.sorting.supplier.file.impl;
+package ru.cft.drozdrtskiy.sorting.supplier.file_impl;
 
 import org.apache.commons.io.LineIterator;
-import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
-import ru.cft.drozdrtskiy.sorting.supplier.file.FileElementSupplier;
+import ru.cft.drozdrtskiy.sorting.element.FileElement;
+import ru.cft.drozdrtskiy.sorting.supplier.FileElementSupplier;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 
-public abstract class AbstractFileElementSupplier implements FileElementSupplier {
+abstract class AbstractFileElementSupplier implements FileElementSupplier {
 
     protected final LineIterator lineIterator;
     protected final Path path;

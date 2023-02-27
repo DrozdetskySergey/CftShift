@@ -1,6 +1,6 @@
-package ru.cft.drozdrtskiy.sorting.sorter.file.writer;
+package ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer;
 
-import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
+import ru.cft.drozdrtskiy.sorting.element.FileElement;
 
 import java.io.IOException;
 

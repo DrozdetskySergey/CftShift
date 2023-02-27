@@ -1,16 +1,16 @@
-package ru.cft.drozdrtskiy.sorting.sorter.file;
+package ru.cft.drozdrtskiy.sorting.sorter.file_impl;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
 import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.Element;
-import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
+import ru.cft.drozdrtskiy.sorting.element.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
-import ru.cft.drozdrtskiy.sorting.sorter.file.writer.FileWriter;
-import ru.cft.drozdrtskiy.sorting.sorter.file.writer.impl.FileWriterWithIgnoring;
-import ru.cft.drozdrtskiy.sorting.sorter.file.writer.impl.SimpleFileWriter;
+import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.FileWriter;
+import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl.FileWriterWithIgnoring;
+import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl.SimpleFileWriter;
 import ru.cft.drozdrtskiy.sorting.sorter.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
-import ru.cft.drozdrtskiy.sorting.supplier.file.FileElementSupplierFactory;
+import ru.cft.drozdrtskiy.sorting.supplier.file_impl.factory.FileElementSupplierFactory;
 import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
 
 import java.io.*;

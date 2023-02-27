@@ -1,6 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.element.file;
-
-import ru.cft.drozdrtskiy.sorting.element.Element;
+package ru.cft.drozdrtskiy.sorting.element;
 
 public interface FileElement extends Element {
 
