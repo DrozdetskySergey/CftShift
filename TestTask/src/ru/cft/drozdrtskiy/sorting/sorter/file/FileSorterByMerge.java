@@ -1,10 +1,13 @@
-package ru.cft.drozdrtskiy.sorting.sorter.file.by_merge;
+package ru.cft.drozdrtskiy.sorting.sorter.file;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
 import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
+import ru.cft.drozdrtskiy.sorting.sorter.file.writer.FileWriter;
+import ru.cft.drozdrtskiy.sorting.sorter.file.writer.impl.FileWriterWithIgnoring;
+import ru.cft.drozdrtskiy.sorting.sorter.file.writer.impl.SimpleFileWriter;
 import ru.cft.drozdrtskiy.sorting.sorter.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.supplier.file.FileElementSupplierFactory;
@@ -22,8 +25,6 @@ public final class FileSorterByMerge implements Sorter {
     private final boolean isUnsortedFileElementsIgnore;
     private final FileElementSupplierFactory fileElementSupplierFactory;
     private final Comparator<Element> comparator;
-    private int IgnoredFileElementCount;
-    private FileElement previousFileElement;
 
     public static FileSorterByMerge from(FileSorterArgumentsDTO DTO) {
         return new FileSorterByMerge(DTO);
@@ -47,10 +48,12 @@ public final class FileSorterByMerge implements Sorter {
             MessagePrinter.print(String.format("Результат в файле: %s", outputFile.toAbsolutePath()));
         } catch (IOException e) {
             MessagePrinter.print(String.format("Не удачное чтение/запись файла(ов). %s", e.getMessage()));
+        } catch (Exception e) {
+            MessagePrinter.print(e.getMessage());
         }
     }
 
-    private void sortInputFilesAndWriteOutputFile() throws IOException {
+    private void sortInputFilesAndWriteOutputFile() throws Exception {
         List<ElementSupplier> elementSuppliers = new ArrayList<>(inputFiles.size());
 
         try {
@@ -77,32 +80,18 @@ public final class FileSorterByMerge implements Sorter {
         }
     }
 
-    private void useElementSelectorToWriteOutputFile(ElementSelector elementSelector) throws IOException {
-        try (BufferedWriter fileWriter = Files.newBufferedWriter(outputFile)) {
+    private void useElementSelectorToWriteOutputFile(ElementSelector elementSelector) throws Exception {
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile);
+             FileWriter fileWriter = isUnsortedFileElementsIgnore
+                     ? FileWriterWithIgnoring.from(bufferedWriter, comparator)
+                     : SimpleFileWriter.from(bufferedWriter)) {
+
             FileElement fileElement = (FileElement) elementSelector.next();
 
             while (fileElement != null) {
-                writeFileElementToFileOrIgnore(fileElement, fileWriter);
+                fileWriter.write(fileElement);
                 fileElement = (FileElement) elementSelector.next();
             }
-        } finally {
-            if (IgnoredFileElementCount > 0) {
-                MessagePrinter.print(String.format("Были проигнорированны строки нарушающие сортировку "
-                        + "в исходных файлах - %d шт.", IgnoredFileElementCount));
-            }
-        }
-    }
-
-    private void writeFileElementToFileOrIgnore(FileElement fileElement, BufferedWriter fileWriter) throws IOException {
-        boolean isNotNeedToIgnore = !isUnsortedFileElementsIgnore;
-
-        if (isNotNeedToIgnore) {
-            fileWriter.write(fileElement.toWritableFormat());
-        } else if (previousFileElement == null || comparator.compare(fileElement, previousFileElement) >= 0) {
-            fileWriter.write(fileElement.toWritableFormat());
-            previousFileElement = fileElement;
-        } else {
-            IgnoredFileElementCount++;
         }
     }
 }

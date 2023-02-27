@@ -1,7 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.supplier.file.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.file.impl.StringFileElement;
-import ru.cft.drozdrtskiy.sorting.supplier.file.AbstractFileElementSupplier;
 
 import java.io.IOException;
 import java.nio.file.Path;

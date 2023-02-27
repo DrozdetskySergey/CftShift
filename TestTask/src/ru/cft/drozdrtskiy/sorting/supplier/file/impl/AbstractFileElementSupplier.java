@@ -1,7 +1,8 @@
-package ru.cft.drozdrtskiy.sorting.supplier.file;
+package ru.cft.drozdrtskiy.sorting.supplier.file.impl;
 
 import org.apache.commons.io.LineIterator;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
+import ru.cft.drozdrtskiy.sorting.supplier.file.FileElementSupplier;
 
 import java.io.IOException;
 import java.nio.file.Files;
