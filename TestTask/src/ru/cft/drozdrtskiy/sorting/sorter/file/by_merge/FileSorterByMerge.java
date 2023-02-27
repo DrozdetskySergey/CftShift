@@ -8,7 +8,7 @@ import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.supplier.file.FileElementSupplierFactory;
-import ru.cft.drozdrtskiy.sorting.util.Writer;
+import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
 
 import java.io.*;
 import java.nio.file.*;
@@ -44,9 +44,9 @@ public final class FileSorterByMerge implements Sorter {
     public void sort() {
         try {
             sortInputFilesAndWriteOutputFile();
-            Writer.write(String.format("Результат в файле: %s", outputFile.toAbsolutePath()));
+            MessagePrinter.print(String.format("Результат в файле: %s", outputFile.toAbsolutePath()));
         } catch (IOException e) {
-            Writer.write(String.format("Не удачное чтение/запись файла(ов). %s", e.getMessage()));
+            MessagePrinter.print(String.format("Не удачное чтение/запись файла(ов). %s", e.getMessage()));
         }
     }
 
@@ -71,7 +71,7 @@ public final class FileSorterByMerge implements Sorter {
                 try {
                     supplier.close();
                 } catch (Exception e) {
-                    Writer.write(e.getMessage());
+                    MessagePrinter.print(e.getMessage());
                 }
             }
         }
@@ -87,7 +87,7 @@ public final class FileSorterByMerge implements Sorter {
             }
         } finally {
             if (IgnoredFileElementCount > 0) {
-                Writer.write(String.format("Были проигнорированны строки нарушающие сортировку "
+                MessagePrinter.print(String.format("Были проигнорированны строки нарушающие сортировку "
                         + "в исходных файлах - %d шт.", IgnoredFileElementCount));
             }
         }

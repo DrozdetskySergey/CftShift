@@ -6,15 +6,15 @@ import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.file.by_merge.FileSorterByMerge;
 import ru.cft.drozdrtskiy.sorting.util.Message;
-import ru.cft.drozdrtskiy.sorting.util.Writer;
+import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
 
 public final class Main {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            Writer.write(Message.FILE_SORT_INFO);
-            Writer.write(Message.FILE_SORT_PARAMS);
-            Writer.write(Message.FILE_SORT_KEYS);
+            MessagePrinter.print(Message.FILE_SORT_INFO);
+            MessagePrinter.print(Message.FILE_SORT_PARAMS);
+            MessagePrinter.print(Message.FILE_SORT_KEYS);
 
             return;
         }
@@ -24,8 +24,8 @@ public final class Main {
         try {
             fileSorterArguments = FileSorterArguments.from(args);
         } catch (ArgsException e) {
-            Writer.write(e.getMessage());
-            Writer.write(Message.FILE_SORT_PARAMS);
+            MessagePrinter.print(e.getMessage());
+            MessagePrinter.print(Message.FILE_SORT_PARAMS);
 
             return;
         }
