@@ -7,7 +7,7 @@ import java.util.*;
 
 public final class ElementSelector {
 
-    private List<ElementExtractor> elementExtractors;
+    private final List<ElementExtractor> elementExtractors;
     private final Comparator<Element> comparator;
 
     public static ElementSelector from(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
@@ -15,13 +15,12 @@ public final class ElementSelector {
     }
 
     private ElementSelector(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
-        createElementExtractors(suppliers);
+        elementExtractors = new ArrayList<>(suppliers.size());
+        fillElementExtractors(suppliers);
         this.comparator = comparator;
     }
 
-    private void createElementExtractors(List<ElementSupplier> suppliers) {
-        elementExtractors = new ArrayList<>(suppliers.size());
-
+    private void fillElementExtractors(List<ElementSupplier> suppliers) {
         for (ElementSupplier supplier : suppliers) {
             ElementExtractor elementExtractor = ElementExtractor.from(supplier);
 
@@ -31,13 +30,9 @@ public final class ElementSelector {
         }
     }
 
-    public boolean hasNext() {
-        return elementExtractors.size() > 0;
-    }
-
-    public Element next() throws IllegalAccessException {
+    public Element next() {
         if (elementExtractors.size() == 0) {
-            throw new IllegalAccessException("Отсутствует постовщик элементов.");
+            return null;
         }
 
         ElementExtractor firstExtractor = elementExtractors.get(0);

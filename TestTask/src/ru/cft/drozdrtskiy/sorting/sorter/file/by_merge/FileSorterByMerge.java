@@ -79,12 +79,12 @@ public final class FileSorterByMerge implements Sorter {
 
     private void useElementSelectorToWriteOutputFile(ElementSelector elementSelector) throws IOException {
         try (BufferedWriter fileWriter = Files.newBufferedWriter(outputFile)) {
-            while (elementSelector.hasNext()) {
-                FileElement fileElement = (FileElement) elementSelector.next();
+            FileElement fileElement = (FileElement) elementSelector.next();
+
+            while (fileElement != null) {
                 writeFileElementToFileOrIgnore(fileElement, fileWriter);
+                fileElement = (FileElement) elementSelector.next();
             }
-        } catch (IllegalAccessException e) {
-            Writer.write(String.format("Неожиданная потеря доступа до элементов. %s", e.getMessage()));
         } finally {
             if (IgnoredFileElementCount > 0) {
                 Writer.write(String.format("Были проигнорированны строки нарушающие сортировку "
