@@ -14,11 +14,7 @@ public final class FileWriterWithIgnoring implements FileWriter {
     private int IgnoredFileElementCount;
     private FileElement previousFileElement;
 
-    public static FileWriterWithIgnoring from(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
-        return new FileWriterWithIgnoring(fileWriter, comparator);
-    }
-
-    private FileWriterWithIgnoring(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
+    public FileWriterWithIgnoring(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
         this.comparator = comparator;
         this.fileWriter = fileWriter;
     }

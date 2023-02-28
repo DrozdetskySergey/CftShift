@@ -7,11 +7,7 @@ import java.nio.file.Path;
 
 public final class StringFileElementSupplier extends AbstractFileElementSupplier {
 
-    public static StringFileElementSupplier from(Path path) throws IOException {
-        return new StringFileElementSupplier(path);
-    }
-
-    private StringFileElementSupplier(Path path) throws IOException {
+    public StringFileElementSupplier(Path path) throws IOException {
         super(path);
     }
 

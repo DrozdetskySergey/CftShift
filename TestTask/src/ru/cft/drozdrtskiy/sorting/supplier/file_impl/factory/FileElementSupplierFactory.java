@@ -20,9 +20,9 @@ public final class FileElementSupplierFactory {
         this.elementType = elementType;
     }
 
-    public FileElementSupplier create(Path path) throws IOException {
+    public FileElementSupplier createFor(Path path) throws IOException {
         return elementType == ElementType.INTEGER ?
-                IntegerFileElementSupplier.from(path) :
-                StringFileElementSupplier.from(path);
+                new IntegerFileElementSupplier(path) :
+                new StringFileElementSupplier(path);
     }
 }

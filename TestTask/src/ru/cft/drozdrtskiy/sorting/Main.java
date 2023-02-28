@@ -22,7 +22,7 @@ public final class Main {
         FileSorterArguments fileSorterArguments;
 
         try {
-            fileSorterArguments = FileSorterArguments.from(args);
+            fileSorterArguments = new FileSorterArguments(args);
         } catch (ArgsException e) {
             MessagePrinter.print(e.getMessage());
             MessagePrinter.print(Message.FILE_SORT_PARAMS);
@@ -31,7 +31,7 @@ public final class Main {
         }
 
         FileSorterArgumentsDTO fileSorterArgumentsDTO = fileSorterArguments.createDTO();
-        Sorter sorter = FileSorterByMerge.from(fileSorterArgumentsDTO);
+        Sorter sorter = new FileSorterByMerge(fileSorterArgumentsDTO);
         sorter.sort();
     }
 }

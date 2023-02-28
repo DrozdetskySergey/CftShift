@@ -22,12 +22,9 @@ public final class FileSorterArguments {
     private final Path outputFile;
     private final List<Path> inputFiles;
 
-    public static FileSorterArguments from(String[] args) throws ArgsException {
-        return new FileSorterArguments(Arrays.asList(args));
-    }
-
-    private FileSorterArguments(List<String> strings) throws ArgsException {
-        parseArgumentStrings(strings);
+    public FileSorterArguments(String[] args) throws ArgsException {
+        List<String> arguments = Arrays.asList(args);
+        parseArguments(arguments);
 
         sortDirection = fetchSortDirection();
         elementType = fetchElementType();
@@ -56,7 +53,7 @@ public final class FileSorterArguments {
         return DTO;
     }
 
-    private void parseArgumentStrings(List<String> strings) throws ArgsException {
+    private void parseArguments(List<String> strings) throws ArgsException {
         List<String> validArguments = strings.stream()
                 .filter(Objects::nonNull)
                 .filter(Predicate.not(String::isBlank))

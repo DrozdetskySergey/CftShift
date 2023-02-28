@@ -25,11 +25,7 @@ public final class FileSorterByMerge implements Sorter {
     private final FileElementSupplierFactory fileElementSupplierFactory;
     private final Comparator<FileElement> comparator;
 
-    public static FileSorterByMerge from(FileSorterArgumentsDTO DTO) {
-        return new FileSorterByMerge(DTO);
-    }
-
-    private FileSorterByMerge(FileSorterArgumentsDTO DTO) {
+    public FileSorterByMerge(FileSorterArgumentsDTO DTO) {
         outputFile = Paths.get(DTO.outputFile.toUri());
         inputFiles = DTO.inputFiles.stream()
                 .map(p -> Paths.get(p.toUri()))
@@ -58,7 +54,7 @@ public final class FileSorterByMerge implements Sorter {
 
         try {
             for (Path file : inputFiles) {
-                fileElementSuppliers.add(fileElementSupplierFactory.create(file));
+                fileElementSuppliers.add(fileElementSupplierFactory.createFor(file));
             }
 
             ElementSelector<FileElement> elementSelector = new ElementSelector<>(fileElementSuppliers, comparator);
@@ -83,8 +79,8 @@ public final class FileSorterByMerge implements Sorter {
     private void useElementSelectorToWriteOutputFile(ElementSelector<FileElement> elementSelector) throws Exception {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile);
              FileWriter fileWriter = isUnsortedFileElementsIgnore ?
-                     FileWriterWithIgnoring.from(bufferedWriter, comparator) :
-                     SimpleFileWriter.from(bufferedWriter)) {
+                     new FileWriterWithIgnoring(bufferedWriter, comparator) :
+                     new SimpleFileWriter(bufferedWriter)) {
 
             FileElement fileElement = elementSelector.next();
 
