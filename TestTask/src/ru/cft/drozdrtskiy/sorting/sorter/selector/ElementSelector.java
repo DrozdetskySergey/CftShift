@@ -5,24 +5,20 @@ import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 
 import java.util.*;
 
-public final class ElementSelector {
+public final class ElementSelector<E extends Element> {
 
-    private final List<ElementExtractor> elementExtractors;
-    private final Comparator<Element> comparator;
+    private final List<ElementExtractor<E>> elementExtractors;
+    private final Comparator<E> comparator;
 
-    public static ElementSelector from(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
-        return new ElementSelector(suppliers, comparator);
-    }
-
-    private ElementSelector(List<ElementSupplier> suppliers, Comparator<Element> comparator) {
-        elementExtractors = new ArrayList<>(suppliers.size());
-        fillElementExtractors(suppliers);
+    public ElementSelector(List<ElementSupplier<E>> elementSuppliers, Comparator<E> comparator) {
         this.comparator = comparator;
+        elementExtractors = new ArrayList<>(elementSuppliers.size());
+        fillElementExtractors(elementSuppliers);
     }
 
-    private void fillElementExtractors(List<ElementSupplier> suppliers) {
-        for (ElementSupplier supplier : suppliers) {
-            ElementExtractor elementExtractor = ElementExtractor.from(supplier);
+    private void fillElementExtractors(List<ElementSupplier<E>> elementSuppliers) {
+        for (ElementSupplier<E> supplier : elementSuppliers) {
+            ElementExtractor<E> elementExtractor = new ElementExtractor<>(supplier);
 
             if (elementExtractor.getElement() != null) {
                 elementExtractors.add(elementExtractor);
@@ -30,18 +26,18 @@ public final class ElementSelector {
         }
     }
 
-    public Element next() {
+    public E next() {
         if (elementExtractors.size() == 0) {
             return null;
         }
 
-        ElementExtractor firstExtractor = elementExtractors.get(0);
-        Element element = firstExtractor.getElement();
+        ElementExtractor<E> firstExtractor = elementExtractors.get(0);
+        E element = firstExtractor.getElement();
         int elementExtractorIndex = 0;
 
         for (int i = 1; i < elementExtractors.size(); i++) {
-            ElementExtractor anotherExtractor = elementExtractors.get(i);
-            Element anotherElement = anotherExtractor.getElement();
+            ElementExtractor<E> anotherExtractor = elementExtractors.get(i);
+            E anotherElement = anotherExtractor.getElement();
 
             if (comparator.compare(element, anotherElement) > 0) {
                 element = anotherElement;
@@ -49,13 +45,13 @@ public final class ElementSelector {
             }
         }
 
-        updateOrRemoveElementExtractor(elementExtractorIndex);
+        updateOrRemoveElementExtractorByIndex(elementExtractorIndex);
 
         return element;
     }
 
-    private void updateOrRemoveElementExtractor(int index) {
-        ElementExtractor elementExtractor = elementExtractors.get(index);
+    private void updateOrRemoveElementExtractorByIndex(int index) {
+        ElementExtractor<E> elementExtractor = elementExtractors.get(index);
         elementExtractor.update();
 
         if (elementExtractor.getElement() == null) {

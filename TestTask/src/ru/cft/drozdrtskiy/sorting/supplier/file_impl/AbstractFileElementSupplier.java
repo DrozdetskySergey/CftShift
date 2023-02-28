@@ -30,7 +30,7 @@ abstract class AbstractFileElementSupplier implements FileElementSupplier {
         StringBuilder exceptionMessage = new StringBuilder();
 
         if (invalidFileElementCount > 0) {
-            exceptionMessage.append(String.format("Файл %s. Проигнорированно ошибочных строк - %d шт. "
+            exceptionMessage.append(String.format("В файле %s проигнорированно ошибочных строк - %d шт. "
                     , path.getFileName(), invalidFileElementCount));
         }
 

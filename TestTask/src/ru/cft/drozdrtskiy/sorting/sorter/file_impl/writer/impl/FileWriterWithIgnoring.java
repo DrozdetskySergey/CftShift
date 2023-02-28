@@ -1,6 +1,5 @@
 package ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl;
 
-import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.FileWriter;
 import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
@@ -10,16 +9,16 @@ import java.util.Comparator;
 
 public final class FileWriterWithIgnoring implements FileWriter {
 
-    private final Comparator<Element> comparator;
+    private final Comparator<FileElement> comparator;
     private final BufferedWriter fileWriter;
     private int IgnoredFileElementCount;
     private FileElement previousFileElement;
 
-    public static FileWriterWithIgnoring from(BufferedWriter fileWriter, Comparator<Element> comparator) {
+    public static FileWriterWithIgnoring from(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
         return new FileWriterWithIgnoring(fileWriter, comparator);
     }
 
-    private FileWriterWithIgnoring(BufferedWriter fileWriter, Comparator<Element> comparator) {
+    private FileWriterWithIgnoring(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
         this.comparator = comparator;
         this.fileWriter = fileWriter;
     }

@@ -3,21 +3,17 @@ package ru.cft.drozdrtskiy.sorting.sorter.selector;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 
-final class ElementExtractor {
+final class ElementExtractor<E extends Element> {
 
-    private final ElementSupplier elementSupplier;
-    private Element element;
+    private final ElementSupplier<E> elementSupplier;
+    private E element;
 
-    public static ElementExtractor from(ElementSupplier elementSupplier) {
-        return new ElementExtractor(elementSupplier);
-    }
-
-    private ElementExtractor(ElementSupplier elementSupplier) {
+    public ElementExtractor(ElementSupplier<E> elementSupplier) {
         this.elementSupplier = elementSupplier;
         element = elementSupplier.next();
     }
 
-    public Element getElement() {
+    public E getElement() {
         return element;
     }
 
