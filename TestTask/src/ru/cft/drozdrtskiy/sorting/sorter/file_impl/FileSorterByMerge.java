@@ -5,8 +5,7 @@ import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.FileWriter;
-import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl.FileWriterWithIgnoring;
-import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl.SimpleFileWriter;
+import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl.*;
 import ru.cft.drozdrtskiy.sorting.sorter.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.supplier.file_impl.factory.FileElementSupplierFactory;
@@ -54,7 +53,7 @@ public final class FileSorterByMerge implements Sorter {
 
         try {
             for (Path file : inputFiles) {
-                fileElementSuppliers.add(fileElementSupplierFactory.createFor(file));
+                fileElementSuppliers.add(fileElementSupplierFactory.createForFile(file));
             }
 
             ElementSelector<FileElement> elementSelector = new ElementSelector<>(fileElementSuppliers, comparator);

@@ -5,8 +5,7 @@ import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
 import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.file_impl.FileSorterByMerge;
-import ru.cft.drozdrtskiy.sorting.util.Message;
-import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
+import ru.cft.drozdrtskiy.sorting.util.*;
 
 public final class Main {
 
@@ -30,7 +29,7 @@ public final class Main {
             return;
         }
 
-        FileSorterArgumentsDTO fileSorterArgumentsDTO = fileSorterArguments.createDTO();
+        FileSorterArgumentsDTO fileSorterArgumentsDTO = fileSorterArguments.getDTO();
         Sorter sorter = new FileSorterByMerge(fileSorterArgumentsDTO);
         sorter.sort();
     }

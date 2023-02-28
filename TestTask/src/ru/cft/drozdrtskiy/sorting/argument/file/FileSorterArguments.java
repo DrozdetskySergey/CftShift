@@ -1,9 +1,7 @@
 package ru.cft.drozdrtskiy.sorting.argument.file;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
-import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
-import ru.cft.drozdrtskiy.sorting.argument.ElementType;
-import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
+import ru.cft.drozdrtskiy.sorting.argument.*;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -39,7 +37,7 @@ public final class FileSorterArguments {
         checkOutputFileCanBeWritten();
     }
 
-    public FileSorterArgumentsDTO createDTO() {
+    public FileSorterArgumentsDTO getDTO() {
         FileSorterArgumentsDTO DTO = new FileSorterArgumentsDTO();
 
         DTO.sortDirection = sortDirection;

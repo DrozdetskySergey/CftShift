@@ -1,7 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.element.file_impl;
 
-import ru.cft.drozdrtskiy.sorting.element.Element;
-import ru.cft.drozdrtskiy.sorting.element.FileElement;
+import ru.cft.drozdrtskiy.sorting.element.*;
 
 abstract class AbstractFileElement<T> implements FileElement {
 
