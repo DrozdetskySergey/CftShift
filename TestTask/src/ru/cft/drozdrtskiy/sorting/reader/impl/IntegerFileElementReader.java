@@ -1,13 +1,13 @@
-package ru.cft.drozdrtskiy.sorting.supplier.impl;
+package ru.cft.drozdrtskiy.sorting.reader.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.impl.IntegerFileElement;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-final class IntegerFileElementSupplier extends AbstractFileElementSupplier {
+final class IntegerFileElementReader extends AbstractFileElementReader {
 
-    public IntegerFileElementSupplier(Path path) throws IOException {
+    public IntegerFileElementReader(Path path) throws IOException {
         super(path);
     }
 

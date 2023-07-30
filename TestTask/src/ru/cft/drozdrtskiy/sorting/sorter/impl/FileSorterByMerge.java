@@ -6,9 +6,9 @@ import ru.cft.drozdrtskiy.sorting.element.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.writer.FileWriter;
 import ru.cft.drozdrtskiy.sorting.writer.impl.*;
-import ru.cft.drozdrtskiy.sorting.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
-import ru.cft.drozdrtskiy.sorting.supplier.impl.FileElementSupplierFactory;
+import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
+import ru.cft.drozdrtskiy.sorting.reader.impl.FileElementReaderFactory;
 import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
 
 import java.io.*;
@@ -21,7 +21,7 @@ public final class FileSorterByMerge implements Sorter {
     private final Path outputFile;
     private final List<Path> inputFiles;
     private final boolean isUnsortedFileElementsIgnore;
-    private final FileElementSupplierFactory fileElementSupplierFactory;
+    private final FileElementReaderFactory fileElementReaderFactory;
     private final Comparator<FileElement> comparator;
 
     public FileSorterByMerge(FileSorterArgumentsDTO DTO) {
@@ -30,7 +30,7 @@ public final class FileSorterByMerge implements Sorter {
                 .map(Paths::get)
                 .collect(Collectors.toList());
         isUnsortedFileElementsIgnore = DTO.isUnsortedFileElementsIgnore;
-        fileElementSupplierFactory = FileElementSupplierFactory.from(DTO.elementType);
+        fileElementReaderFactory = FileElementReaderFactory.from(DTO.elementType);
         comparator = DTO.sortDirection == SortDirection.DESC ?
                 Comparator.reverseOrder() :
                 Comparator.naturalOrder();
@@ -39,7 +39,7 @@ public final class FileSorterByMerge implements Sorter {
     @Override
     public void sort() {
         try {
-            sortInputFilesBySelectorAndWriteOutputFile();
+            createElementSupplierAndWriteOutputFile();
             MessagePrinter.print(String.format("Результат в файле: %s", outputFile.toAbsolutePath()));
         } catch (IOException e) {
             MessagePrinter.print(String.format("Не удачное чтение/запись файла. %s", e.getMessage()));
@@ -48,23 +48,23 @@ public final class FileSorterByMerge implements Sorter {
         }
     }
 
-    private void sortInputFilesBySelectorAndWriteOutputFile() throws Exception {
-        List<ElementSupplier<FileElement>> fileElementSuppliers = new ArrayList<>(inputFiles.size());
+    private void createElementSupplierAndWriteOutputFile() throws Exception {
+        List<ElementReader<FileElement>> fileElementReaders = new ArrayList<>(inputFiles.size());
 
         try {
             for (Path file : inputFiles) {
-                fileElementSuppliers.add(fileElementSupplierFactory.createForFile(file));
+                fileElementReaders.add(fileElementReaderFactory.createForFile(file));
             }
 
-            ElementSelector<FileElement> elementSelector = new ElementSelector<>(fileElementSuppliers, comparator);
-            useElementSelectorToWriteOutputFile(elementSelector);
+            ElementSupplier<FileElement> elementSupplier = new ElementSupplier<>(fileElementReaders, comparator);
+            useElementSupplierToWriteOutputFile(elementSupplier);
         } finally {
-            closeSuppliers(fileElementSuppliers);
+            closeReaders(fileElementReaders);
         }
     }
 
-    private void closeSuppliers(List<ElementSupplier<FileElement>> fileElementSuppliers) {
-        for (ElementSupplier<FileElement> supplier : fileElementSuppliers) {
+    private void closeReaders(List<ElementReader<FileElement>> fileElementReaders) {
+        for (ElementReader<FileElement> supplier : fileElementReaders) {
             if (supplier != null) {
                 try {
                     supplier.close();
@@ -75,17 +75,17 @@ public final class FileSorterByMerge implements Sorter {
         }
     }
 
-    private void useElementSelectorToWriteOutputFile(ElementSelector<FileElement> elementSelector) throws Exception {
+    private void useElementSupplierToWriteOutputFile(ElementSupplier<FileElement> elementSupplier) throws Exception {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile);
              FileWriter fileWriter = isUnsortedFileElementsIgnore ?
                      new FileWriterWithIgnoring(bufferedWriter, comparator) :
                      new SimpleFileWriter(bufferedWriter)) {
 
-            FileElement fileElement = elementSelector.next();
+            FileElement fileElement = elementSupplier.next();
 
             while (fileElement != null) {
                 fileWriter.write(fileElement);
-                fileElement = elementSelector.next();
+                fileElement = elementSupplier.next();
             }
         }
     }

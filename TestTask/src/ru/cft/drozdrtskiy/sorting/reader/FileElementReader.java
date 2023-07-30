@@ -1,8 +1,8 @@
-package ru.cft.drozdrtskiy.sorting.supplier;
+package ru.cft.drozdrtskiy.sorting.reader;
 
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
 
-public interface FileElementSupplier extends ElementSupplier<FileElement> {
+public interface FileElementReader extends ElementReader<FileElement> {
 
     @Override
     FileElement next();
