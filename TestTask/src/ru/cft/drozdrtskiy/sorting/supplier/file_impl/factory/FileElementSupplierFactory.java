@@ -20,8 +20,14 @@ public final class FileElementSupplierFactory {
     }
 
     public FileElementSupplier createForFile(Path path) throws IOException {
-        return elementType == ElementType.INTEGER ?
-                new IntegerFileElementSupplier(path) :
-                new StringFileElementSupplier(path);
+        FileElementSupplier result = null;
+
+        if (elementType == ElementType.INTEGER) {
+            result = new IntegerFileElementSupplier(path);
+        } else if (elementType == ElementType.STRING) {
+            result = new StringFileElementSupplier(path);
+        }
+
+        return result;
     }
 }
