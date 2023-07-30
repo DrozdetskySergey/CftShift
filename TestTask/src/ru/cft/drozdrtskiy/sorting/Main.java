@@ -4,7 +4,7 @@ import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
 import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
 import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
-import ru.cft.drozdrtskiy.sorting.sorter.file_impl.FileSorterByMerge;
+import ru.cft.drozdrtskiy.sorting.sorter.impl.FileSorterByMerge;
 import ru.cft.drozdrtskiy.sorting.util.*;
 
 public final class Main {

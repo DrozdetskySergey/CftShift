@@ -1,12 +1,12 @@
-package ru.cft.drozdrtskiy.sorting.sorter.file_impl;
+package ru.cft.drozdrtskiy.sorting.sorter.impl;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
 import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
-import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.FileWriter;
-import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl.*;
-import ru.cft.drozdrtskiy.sorting.sorter.selector.ElementSelector;
+import ru.cft.drozdrtskiy.sorting.writer.FileWriter;
+import ru.cft.drozdrtskiy.sorting.writer.impl.*;
+import ru.cft.drozdrtskiy.sorting.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.supplier.impl.FileElementSupplierFactory;
 import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;

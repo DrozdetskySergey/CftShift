@@ -1,7 +1,7 @@
-package ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl;
+package ru.cft.drozdrtskiy.sorting.writer.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
-import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.FileWriter;
+import ru.cft.drozdrtskiy.sorting.writer.FileWriter;
 import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
 
 import java.io.*;

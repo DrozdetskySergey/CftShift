@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.sorter.selector;
+package ru.cft.drozdrtskiy.sorting.selector;
 
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
