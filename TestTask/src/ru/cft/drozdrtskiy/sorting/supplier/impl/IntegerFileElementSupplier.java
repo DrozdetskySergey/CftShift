@@ -1,11 +1,11 @@
-package ru.cft.drozdrtskiy.sorting.supplier.file_impl;
+package ru.cft.drozdrtskiy.sorting.supplier.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.file_impl.IntegerFileElement;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-public final class IntegerFileElementSupplier extends AbstractFileElementSupplier {
+final class IntegerFileElementSupplier extends AbstractFileElementSupplier {
 
     public IntegerFileElementSupplier(Path path) throws IOException {
         super(path);

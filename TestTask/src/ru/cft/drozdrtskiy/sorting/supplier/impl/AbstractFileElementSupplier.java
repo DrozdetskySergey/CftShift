@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.supplier.file_impl;
+package ru.cft.drozdrtskiy.sorting.supplier.impl;
 
 import org.apache.commons.io.LineIterator;
 import ru.cft.drozdrtskiy.sorting.element.FileElement;

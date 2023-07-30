@@ -8,7 +8,7 @@ import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.FileWriter;
 import ru.cft.drozdrtskiy.sorting.sorter.file_impl.writer.impl.*;
 import ru.cft.drozdrtskiy.sorting.sorter.selector.ElementSelector;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
-import ru.cft.drozdrtskiy.sorting.supplier.file_impl.factory.FileElementSupplierFactory;
+import ru.cft.drozdrtskiy.sorting.supplier.impl.FileElementSupplierFactory;
 import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
 
 import java.io.*;

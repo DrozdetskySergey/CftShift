@@ -1,8 +1,7 @@
-package ru.cft.drozdrtskiy.sorting.supplier.file_impl.factory;
+package ru.cft.drozdrtskiy.sorting.supplier.impl;
 
 import ru.cft.drozdrtskiy.sorting.argument.ElementType;
 import ru.cft.drozdrtskiy.sorting.supplier.FileElementSupplier;
-import ru.cft.drozdrtskiy.sorting.supplier.file_impl.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
