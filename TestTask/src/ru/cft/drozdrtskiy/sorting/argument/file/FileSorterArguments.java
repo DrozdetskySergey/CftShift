@@ -43,9 +43,9 @@ public final class FileSorterArguments {
         DTO.sortDirection = sortDirection;
         DTO.elementType = elementType;
         DTO.isUnsortedFileElementsIgnore = fetchUnsortedFileElementsIgnore();
-        DTO.outputFile = Paths.get(outputFile.toUri());
+        DTO.outputFile = outputFile.toString();
         DTO.inputFiles = inputFiles.stream()
-                .map(p -> Paths.get(p.toUri()))
+                .map(Path::toString)
                 .collect(Collectors.toList());
 
         return DTO;
