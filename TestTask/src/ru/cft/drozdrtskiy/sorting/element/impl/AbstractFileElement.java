@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.element.file_impl;
+package ru.cft.drozdrtskiy.sorting.element.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.*;
 
