@@ -13,22 +13,22 @@ public final class IntegerFileElementSupplier extends AbstractFileElementSupplie
 
     @Override
     public IntegerFileElement next() {
-        while (lineIterator.hasNext()) {
+        IntegerFileElement result = null;
+
+        while (lineIterator.hasNext() && result == null) {
             String line = lineIterator.nextLine();
 
             if (isInvalidLine(line)) {
                 invalidFileElementCount++;
-                continue;
-            }
-
-            try {
-
-                return new IntegerFileElement(Integer.valueOf(line));
-            } catch (NumberFormatException e) {
-                invalidFileElementCount++;
+            } else {
+                try {
+                    result = new IntegerFileElement(Integer.valueOf(line));
+                } catch (NumberFormatException e) {
+                    invalidFileElementCount++;
+                }
             }
         }
 
-        return null;
+        return result;
     }
 }

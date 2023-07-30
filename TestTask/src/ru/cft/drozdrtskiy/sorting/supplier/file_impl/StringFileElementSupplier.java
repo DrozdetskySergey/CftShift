@@ -13,17 +13,18 @@ public final class StringFileElementSupplier extends AbstractFileElementSupplier
 
     @Override
     public StringFileElement next() {
-        while (lineIterator.hasNext()) {
+        StringFileElement result = null;
+
+        while (lineIterator.hasNext() && result == null) {
             String line = lineIterator.nextLine();
 
             if (isInvalidLine(line)) {
                 invalidFileElementCount++;
-                continue;
+            } else {
+                result = new StringFileElement(line);
             }
-
-            return new StringFileElement(line);
         }
 
-        return null;
+        return result;
     }
 }

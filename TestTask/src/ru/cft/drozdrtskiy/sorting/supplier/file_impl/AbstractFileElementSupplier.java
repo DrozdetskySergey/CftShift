@@ -9,13 +9,13 @@ import java.nio.file.*;
 
 abstract class AbstractFileElementSupplier implements FileElementSupplier {
 
-    protected final LineIterator lineIterator;
     protected final Path path;
+    protected final LineIterator lineIterator;
     protected int invalidFileElementCount;
 
     protected AbstractFileElementSupplier(Path path) throws IOException {
-        lineIterator = new LineIterator(Files.newBufferedReader(path));
         this.path = path;
+        lineIterator = new LineIterator(Files.newBufferedReader(this.path));
     }
 
     protected boolean isInvalidLine(String line) {
