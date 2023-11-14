@@ -9,7 +9,8 @@ import ru.cft.drozdrtskiy.sorting.writer.impl.*;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
 import ru.cft.drozdrtskiy.sorting.reader.impl.FileElementReaderFactory;
-import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
+
+import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 
 import java.io.*;
 import java.nio.file.*;
@@ -40,11 +41,11 @@ public final class FileSorterByMerge implements Sorter {
     public void sort() {
         try {
             createElementSupplierAndWriteOutputFile();
-            MessagePrinter.print(String.format("Результат в файле: %s", outputFile.toAbsolutePath()));
+            print(String.format("Результат в файле: %s", outputFile.toAbsolutePath()));
         } catch (IOException e) {
-            MessagePrinter.print(String.format("Не удачное чтение/запись файла. %s", e.getMessage()));
+            print(String.format("Не удачное чтение/запись файла. %s", e.getMessage()));
         } catch (Exception e) {
-            MessagePrinter.print(e.getMessage());
+            print(e.getMessage());
         }
     }
 
@@ -69,7 +70,7 @@ public final class FileSorterByMerge implements Sorter {
                 try {
                     supplier.close();
                 } catch (Exception e) {
-                    MessagePrinter.print(e.getMessage());
+                    print(e.getMessage());
                 }
             }
         }

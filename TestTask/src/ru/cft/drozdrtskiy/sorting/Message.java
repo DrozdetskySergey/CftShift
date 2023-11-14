@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.util;
+package ru.cft.drozdrtskiy.sorting;
 
 public enum Message implements CharSequence {
 

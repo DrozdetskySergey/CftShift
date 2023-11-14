@@ -2,7 +2,8 @@ package ru.cft.drozdrtskiy.sorting.writer.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
 import ru.cft.drozdrtskiy.sorting.writer.FileWriter;
-import ru.cft.drozdrtskiy.sorting.util.MessagePrinter;
+
+import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 
 import java.io.*;
 import java.util.Comparator;
@@ -32,7 +33,7 @@ public final class FileWriterWithIgnoring implements FileWriter {
     @Override
     public void close() {
         if (IgnoredFileElementCount > 0) {
-            MessagePrinter.print(String.format("Были проигнорированны строки нарушающие сортировку "
+            print(String.format("Были проигнорированны строки нарушающие сортировку "
                     + "в исходных файлах - %d шт.", IgnoredFileElementCount));
         }
     }

@@ -4,15 +4,16 @@ import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
 import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.impl.FileSorterByMerge;
-import ru.cft.drozdrtskiy.sorting.util.*;
+
+import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 
 public final class Main {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            MessagePrinter.print(Message.FILE_SORT_INFO);
-            MessagePrinter.print(Message.FILE_SORT_PARAMS);
-            MessagePrinter.print(Message.FILE_SORT_KEYS);
+            print(Message.FILE_SORT_INFO);
+            print(Message.FILE_SORT_PARAMS);
+            print(Message.FILE_SORT_KEYS);
 
             return;
         }
@@ -22,8 +23,8 @@ public final class Main {
             Sorter sorter = new FileSorterByMerge(fileSorterArguments.getDTO());
             sorter.sort();
         } catch (ArgsException e) {
-            MessagePrinter.print(e.getMessage());
-            MessagePrinter.print(Message.FILE_SORT_PARAMS);
+            print(e.getMessage());
+            print(Message.FILE_SORT_PARAMS);
         }
     }
 }
