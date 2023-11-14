@@ -26,10 +26,8 @@ public final class FileSorterByMerge implements Sorter {
     private final Comparator<FileElement> comparator;
 
     public FileSorterByMerge(FileSorterArgumentsDTO DTO) {
-        outputFile = Paths.get(DTO.outputFile);
-        inputFiles = DTO.inputFiles.stream()
-                .map(Paths::get)
-                .collect(Collectors.toList());
+        outputFile = DTO.outputFile;
+        inputFiles = new ArrayList<>(DTO.inputFiles);
         isUnsortedFileElementsIgnore = DTO.isUnsortedFileElementsIgnore;
         fileElementReaderFactory = FileElementReaderFactory.from(DTO.elementType);
         comparator = DTO.sortDirection == SortDirection.DESC ?

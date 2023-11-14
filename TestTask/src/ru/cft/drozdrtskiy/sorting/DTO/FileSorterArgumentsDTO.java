@@ -2,6 +2,7 @@ package ru.cft.drozdrtskiy.sorting.DTO;
 
 import ru.cft.drozdrtskiy.sorting.argument.*;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public class FileSorterArgumentsDTO {
@@ -9,6 +10,6 @@ public class FileSorterArgumentsDTO {
     public SortDirection sortDirection;
     public ElementType elementType;
     public boolean isUnsortedFileElementsIgnore;
-    public String outputFile;
-    public List<String> inputFiles;
+    public Path outputFile;
+    public List<Path> inputFiles;
 }
