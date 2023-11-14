@@ -17,8 +17,8 @@ public final class ElementSupplier<E extends Element> {
     }
 
     private void fillElementExtractors(List<ElementReader<E>> elementReaders) {
-        for (ElementReader<E> supplier : elementReaders) {
-            ElementExtractor<E> elementExtractor = new ElementExtractor<>(supplier);
+        for (ElementReader<E> reader : elementReaders) {
+            ElementExtractor<E> elementExtractor = new ElementExtractor<>(reader);
 
             if (elementExtractor.getElement() != null) {
                 elementExtractors.add(elementExtractor);
