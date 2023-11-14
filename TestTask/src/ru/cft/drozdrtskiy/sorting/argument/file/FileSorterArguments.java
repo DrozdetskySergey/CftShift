@@ -17,15 +17,16 @@ public final class FileSorterArguments {
     private List<Path> files;
     private final SortDirection sortDirection;
     private final ElementType elementType;
+    private final boolean isUnsortedFileElementsIgnore;
     private final Path outputFile;
     private final List<Path> inputFiles;
 
-    public FileSorterArguments(String[] args) throws ArgsException {
-        List<String> arguments = Arrays.asList(args);
-        parseArguments(arguments);
+    public FileSorterArguments(String[] arguments) throws ArgsException {
+        parseArguments(Arrays.asList(arguments));
 
         sortDirection = fetchSortDirection();
         elementType = fetchElementType();
+        isUnsortedFileElementsIgnore = fetchUnsortedFileElementsIgnore();
         outputFile = fetchOutputFile();
         inputFiles = fetchInputFiles();
 
@@ -42,7 +43,7 @@ public final class FileSorterArguments {
 
         DTO.sortDirection = sortDirection;
         DTO.elementType = elementType;
-        DTO.isUnsortedFileElementsIgnore = fetchUnsortedFileElementsIgnore();
+        DTO.isUnsortedFileElementsIgnore = isUnsortedFileElementsIgnore;
         DTO.outputFile = outputFile.toString();
         DTO.inputFiles = inputFiles.stream()
                 .map(Path::toString)
@@ -94,6 +95,10 @@ public final class FileSorterArguments {
         return result;
     }
 
+    private boolean fetchUnsortedFileElementsIgnore() {
+        return keys.contains(IGNORE_UNSORTED.key);
+    }
+
     private Path fetchOutputFile() {
         return files.stream()
                 .findFirst()
@@ -104,10 +109,6 @@ public final class FileSorterArguments {
         return files.stream()
                 .skip(1)
                 .collect(Collectors.toList());
-    }
-
-    private boolean fetchUnsortedFileElementsIgnore() {
-        return keys.contains(IGNORE_UNSORTED.key);
     }
 
     private void checkAvailabilityAllArguments() throws ArgsException {
@@ -121,14 +122,14 @@ public final class FileSorterArguments {
                 .map(Key::key)
                 .collect(Collectors.toList());
 
-        String unknownKeysJoining = keys.stream()
+        String unknownKeysEnumeration = keys.stream()
                 .filter(Predicate.not(allowedKeys::contains))
-                .collect(Collectors.joining("], [", "[", "]"));
+                .collect(Collectors.joining(", "));
 
-        boolean hasUnknownKeys = !unknownKeysJoining.equals("[]");
+        boolean hasUnknownKeys = unknownKeysEnumeration.length() > 0;
 
         if (hasUnknownKeys) {
-            throw new ArgsException(String.format("Не известные параметры: %s", unknownKeysJoining));
+            throw new ArgsException(String.format("Не известные параметры: %s", unknownKeysEnumeration));
         }
     }
 
