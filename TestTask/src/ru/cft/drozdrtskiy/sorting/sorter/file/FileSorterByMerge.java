@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.sorter.file;
 
-import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
+import ru.cft.drozdrtskiy.sorting.DTO.FileElementSorterArgsDTO;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
@@ -24,7 +24,7 @@ public final class FileSorterByMerge implements Sorter {
     private final FileElementReaderFactory fileElementReaderFactory;
     private final Comparator<FileElement> comparator;
 
-    public FileSorterByMerge(FileSorterArgumentsDTO DTO) {
+    public FileSorterByMerge(FileElementSorterArgsDTO DTO) {
         outputFile = DTO.outputFile;
         inputFiles = new ArrayList<>(DTO.inputFiles);
         isUnsortedFileElementsIgnore = DTO.isUnsortedFileElementsIgnore;

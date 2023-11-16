@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.args.file;
 
-import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
+import ru.cft.drozdrtskiy.sorting.DTO.FileElementSorterArgsDTO;
 import ru.cft.drozdrtskiy.sorting.ElementType;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
 import ru.cft.drozdrtskiy.sorting.args.*;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static ru.cft.drozdrtskiy.sorting.args.file.Key.*;
 
-public final class FileSorterArguments {
+public final class FileElementSorterArgs {
 
     private List<String> keys;
     private List<Path> files;
@@ -23,7 +23,7 @@ public final class FileSorterArguments {
     private final Path outputFile;
     private final List<Path> inputFiles;
 
-    public FileSorterArguments(String[] arguments) throws ArgsException {
+    public FileElementSorterArgs(String[] arguments) throws ArgsException {
         parseArguments(Arrays.asList(arguments));
 
         sortDirection = fetchSortDirection();
@@ -40,8 +40,8 @@ public final class FileSorterArguments {
         checkOutputFileCanBeWritten();
     }
 
-    public FileSorterArgumentsDTO getDTO() {
-        FileSorterArgumentsDTO DTO = new FileSorterArgumentsDTO();
+    public FileElementSorterArgsDTO getDTO() {
+        FileElementSorterArgsDTO DTO = new FileElementSorterArgsDTO();
 
         DTO.sortDirection = sortDirection;
         DTO.elementType = elementType;

@@ -1,7 +1,7 @@
 package ru.cft.drozdrtskiy.sorting;
 
 import ru.cft.drozdrtskiy.sorting.args.ArgsException;
-import ru.cft.drozdrtskiy.sorting.args.file.FileSorterArguments;
+import ru.cft.drozdrtskiy.sorting.args.file.FileElementSorterArgs;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.file.FileSorterByMerge;
 
@@ -19,8 +19,8 @@ public final class Main {
         }
 
         try {
-            FileSorterArguments fileSorterArguments = new FileSorterArguments(args);
-            Sorter sorter = new FileSorterByMerge(fileSorterArguments.getDTO());
+            FileElementSorterArgs fileElementSorterArgs = new FileElementSorterArgs(args);
+            Sorter sorter = new FileSorterByMerge(fileElementSorterArgs.getDTO());
             sorter.sort();
         } catch (ArgsException e) {
             print(e.getMessage());
