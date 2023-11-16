@@ -3,7 +3,7 @@ package ru.cft.drozdrtskiy.sorting;
 import ru.cft.drozdrtskiy.sorting.args.ArgsException;
 import ru.cft.drozdrtskiy.sorting.args.file.FileElementSorterArgs;
 import ru.cft.drozdrtskiy.sorting.sorter.ElementSorter;
-import ru.cft.drozdrtskiy.sorting.sorter.file.FileElementSorter;
+import ru.cft.drozdrtskiy.sorting.sorter.file.impl.FileElementSorterByMerge;
 
 import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 
@@ -20,7 +20,7 @@ public final class Main {
 
         try {
             FileElementSorterArgs fileElementSorterArgs = new FileElementSorterArgs(args);
-            ElementSorter elementSorter = new FileElementSorter(fileElementSorterArgs.getDTO());
+            ElementSorter elementSorter = new FileElementSorterByMerge(fileElementSorterArgs.getDTO());
             elementSorter.sort();
         } catch (ArgsException e) {
             print(e.getMessage());

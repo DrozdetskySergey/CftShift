@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.supplier;
+package ru.cft.drozdrtskiy.sorting.sorter;
 
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
