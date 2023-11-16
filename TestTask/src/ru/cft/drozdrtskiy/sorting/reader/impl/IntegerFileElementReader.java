@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.reader.impl;
 
-import ru.cft.drozdrtskiy.sorting.element.impl.IntegerFileElement;
+import ru.cft.drozdrtskiy.sorting.element.file.impl.IntegerFileElement;
 
 import java.io.IOException;
 import java.nio.file.Path;

@@ -2,7 +2,7 @@ package ru.cft.drozdrtskiy.sorting.sorter.impl;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
-import ru.cft.drozdrtskiy.sorting.element.FileElement;
+import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.writer.FileElementWriter;
 import ru.cft.drozdrtskiy.sorting.writer.impl.*;

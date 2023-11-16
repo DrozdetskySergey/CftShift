@@ -1,7 +1,7 @@
 package ru.cft.drozdrtskiy.sorting.reader.impl;
 
 import org.apache.commons.io.LineIterator;
-import ru.cft.drozdrtskiy.sorting.element.FileElement;
+import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 import ru.cft.drozdrtskiy.sorting.reader.FileElementReader;
 
 import java.io.IOException;

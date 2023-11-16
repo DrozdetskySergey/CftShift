@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.writer.impl;
 
-import ru.cft.drozdrtskiy.sorting.element.FileElement;
+import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 import ru.cft.drozdrtskiy.sorting.writer.FileElementWriter;
 
 import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
