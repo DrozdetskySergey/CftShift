@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.sorter.impl;
+package ru.cft.drozdrtskiy.sorting.sorter.file;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
