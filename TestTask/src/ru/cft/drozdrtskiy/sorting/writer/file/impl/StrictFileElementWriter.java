@@ -1,7 +1,7 @@
-package ru.cft.drozdrtskiy.sorting.writer.impl;
+package ru.cft.drozdrtskiy.sorting.writer.file.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
-import ru.cft.drozdrtskiy.sorting.writer.FileElementWriter;
+import ru.cft.drozdrtskiy.sorting.writer.file.FileElementWriter;
 
 import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 

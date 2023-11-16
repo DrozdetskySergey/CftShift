@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.writer;
+package ru.cft.drozdrtskiy.sorting.writer.file;
 
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
 
