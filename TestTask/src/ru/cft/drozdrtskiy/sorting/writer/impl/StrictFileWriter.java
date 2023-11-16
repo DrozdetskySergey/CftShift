@@ -8,14 +8,14 @@ import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 import java.io.*;
 import java.util.Comparator;
 
-public final class FileWriterWithIgnoring implements FileWriter {
+public final class StrictFileWriter implements FileWriter {
 
     private final Comparator<FileElement> comparator;
     private final BufferedWriter fileWriter;
     private int IgnoredFileElementCount;
     private FileElement previousFileElement;
 
-    public FileWriterWithIgnoring(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
+    public StrictFileWriter(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
         this.comparator = comparator;
         this.fileWriter = fileWriter;
     }

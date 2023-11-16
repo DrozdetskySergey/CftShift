@@ -39,8 +39,8 @@ public final class FileSorterByMerge implements Sorter {
         List<ElementReader<FileElement>> fileElementReaders = new ArrayList<>(inputFiles.size());
 
         try {
-            for (Path file : inputFiles) {
-                fileElementReaders.add(fileElementReaderFactory.createForFile(file));
+            for (Path path : inputFiles) {
+                fileElementReaders.add(fileElementReaderFactory.createForFile(path));
             }
 
             ElementSupplier<FileElement> elementSupplier = new ElementSupplier<>(fileElementReaders, comparator);
@@ -68,17 +68,17 @@ public final class FileSorterByMerge implements Sorter {
     }
 
     private void writeOutputFile(ElementSupplier<FileElement> elementSupplier) throws Exception {
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile);
-             FileWriter fileWriter = isUnsortedFileElementsIgnore ?
-                     new FileWriterWithIgnoring(bufferedWriter, comparator) :
-                     new SimpleFileWriter(bufferedWriter)) {
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile)) {
+            FileWriter fileWriter = isUnsortedFileElementsIgnore ?
+                    new StrictFileWriter(bufferedWriter, comparator) :
+                    new SimpleFileWriter(bufferedWriter);
 
-            FileElement fileElement = elementSupplier.next();
-
-            while (fileElement != null) {
+            for (FileElement fileElement = elementSupplier.next(); fileElement != null; ) {
                 fileWriter.write(fileElement);
                 fileElement = elementSupplier.next();
             }
+
+            fileWriter.close();
         }
     }
 }
