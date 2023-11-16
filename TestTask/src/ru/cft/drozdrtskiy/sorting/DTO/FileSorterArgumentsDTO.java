@@ -1,6 +1,7 @@
 package ru.cft.drozdrtskiy.sorting.DTO;
 
-import ru.cft.drozdrtskiy.sorting.argument.*;
+import ru.cft.drozdrtskiy.sorting.ElementType;
+import ru.cft.drozdrtskiy.sorting.SortDirection;
 
 import java.nio.file.Path;
 import java.util.List;

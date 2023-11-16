@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.argument;
+package ru.cft.drozdrtskiy.sorting;
 
 public enum SortDirection {
 

@@ -1,21 +1,21 @@
 package ru.cft.drozdrtskiy.sorting.writer.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
-import ru.cft.drozdrtskiy.sorting.writer.FileWriter;
+import ru.cft.drozdrtskiy.sorting.writer.FileElementWriter;
 
 import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 
 import java.io.*;
 import java.util.Comparator;
 
-public final class StrictFileWriter implements FileWriter {
+public final class StrictFileElementWriter implements FileElementWriter {
 
     private final Comparator<FileElement> comparator;
     private final BufferedWriter fileWriter;
     private int IgnoredFileElementCount;
     private FileElement previousFileElement;
 
-    public StrictFileWriter(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
+    public StrictFileElementWriter(BufferedWriter fileWriter, Comparator<FileElement> comparator) {
         this.comparator = comparator;
         this.fileWriter = fileWriter;
     }

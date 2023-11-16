@@ -1,10 +1,10 @@
 package ru.cft.drozdrtskiy.sorting.sorter.impl;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
-import ru.cft.drozdrtskiy.sorting.argument.SortDirection;
+import ru.cft.drozdrtskiy.sorting.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
-import ru.cft.drozdrtskiy.sorting.writer.FileWriter;
+import ru.cft.drozdrtskiy.sorting.writer.FileElementWriter;
 import ru.cft.drozdrtskiy.sorting.writer.impl.*;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
@@ -69,16 +69,16 @@ public final class FileSorterByMerge implements Sorter {
 
     private void writeOutputFile(ElementSupplier<FileElement> elementSupplier) throws Exception {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile)) {
-            FileWriter fileWriter = isUnsortedFileElementsIgnore ?
-                    new StrictFileWriter(bufferedWriter, comparator) :
-                    new SimpleFileWriter(bufferedWriter);
+            FileElementWriter fileElementWriter = isUnsortedFileElementsIgnore ?
+                    new StrictFileElementWriter(bufferedWriter, comparator) :
+                    new SimpleFileElementWriter(bufferedWriter);
 
             for (FileElement fileElement = elementSupplier.next(); fileElement != null; ) {
-                fileWriter.write(fileElement);
+                fileElementWriter.write(fileElement);
                 fileElement = elementSupplier.next();
             }
 
-            fileWriter.close();
+            fileElementWriter.close();
         }
     }
 }

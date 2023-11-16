@@ -4,7 +4,7 @@ import ru.cft.drozdrtskiy.sorting.element.FileElement;
 
 import java.io.IOException;
 
-public interface FileWriter extends AutoCloseable {
+public interface FileElementWriter extends AutoCloseable {
 
     void write(FileElement fileElement) throws IOException;
 }

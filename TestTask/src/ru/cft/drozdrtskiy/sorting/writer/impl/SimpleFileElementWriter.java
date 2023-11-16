@@ -1,15 +1,15 @@
 package ru.cft.drozdrtskiy.sorting.writer.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.FileElement;
-import ru.cft.drozdrtskiy.sorting.writer.FileWriter;
+import ru.cft.drozdrtskiy.sorting.writer.FileElementWriter;
 
 import java.io.*;
 
-public final class SimpleFileWriter implements FileWriter {
+public final class SimpleFileElementWriter implements FileElementWriter {
 
     private final BufferedWriter fileWriter;
 
-    public SimpleFileWriter(BufferedWriter fileWriter) {
+    public SimpleFileElementWriter(BufferedWriter fileWriter) {
         this.fileWriter = fileWriter;
     }
 

@@ -1,6 +1,8 @@
 package ru.cft.drozdrtskiy.sorting.argument.file;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
+import ru.cft.drozdrtskiy.sorting.ElementType;
+import ru.cft.drozdrtskiy.sorting.SortDirection;
 import ru.cft.drozdrtskiy.sorting.argument.*;
 
 import java.io.IOException;
