@@ -3,7 +3,7 @@ package ru.cft.drozdrtskiy.sorting.sorter.file;
 import ru.cft.drozdrtskiy.sorting.DTO.FileElementSorterArgsDTO;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
-import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
+import ru.cft.drozdrtskiy.sorting.sorter.ElementSorter;
 import ru.cft.drozdrtskiy.sorting.writer.file.FileElementWriter;
 import ru.cft.drozdrtskiy.sorting.writer.file.impl.*;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
@@ -16,7 +16,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-public final class FileSorterByMerge implements Sorter {
+public final class FileElementSorter implements ElementSorter {
 
     private final Path outputFile;
     private final List<Path> inputFiles;
@@ -24,7 +24,7 @@ public final class FileSorterByMerge implements Sorter {
     private final FileElementReaderFactory fileElementReaderFactory;
     private final Comparator<FileElement> comparator;
 
-    public FileSorterByMerge(FileElementSorterArgsDTO DTO) {
+    public FileElementSorter(FileElementSorterArgsDTO DTO) {
         outputFile = DTO.outputFile;
         inputFiles = new ArrayList<>(DTO.inputFiles);
         isUnsortedFileElementsIgnore = DTO.isUnsortedFileElementsIgnore;

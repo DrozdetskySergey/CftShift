@@ -1,6 +1,6 @@
 package ru.cft.drozdrtskiy.sorting.sorter;
 
-public interface Sorter {
+public interface ElementSorter {
 
     void sort();
 }

@@ -2,8 +2,8 @@ package ru.cft.drozdrtskiy.sorting;
 
 import ru.cft.drozdrtskiy.sorting.args.ArgsException;
 import ru.cft.drozdrtskiy.sorting.args.file.FileElementSorterArgs;
-import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
-import ru.cft.drozdrtskiy.sorting.sorter.file.FileSorterByMerge;
+import ru.cft.drozdrtskiy.sorting.sorter.ElementSorter;
+import ru.cft.drozdrtskiy.sorting.sorter.file.FileElementSorter;
 
 import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 
@@ -20,8 +20,8 @@ public final class Main {
 
         try {
             FileElementSorterArgs fileElementSorterArgs = new FileElementSorterArgs(args);
-            Sorter sorter = new FileSorterByMerge(fileElementSorterArgs.getDTO());
-            sorter.sort();
+            ElementSorter elementSorter = new FileElementSorter(fileElementSorterArgs.getDTO());
+            elementSorter.sort();
         } catch (ArgsException e) {
             print(e.getMessage());
             print(Message.FILE_SORT_PARAMS);
