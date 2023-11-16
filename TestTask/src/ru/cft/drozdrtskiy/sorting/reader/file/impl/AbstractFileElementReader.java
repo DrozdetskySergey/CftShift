@@ -1,8 +1,8 @@
-package ru.cft.drozdrtskiy.sorting.reader.impl;
+package ru.cft.drozdrtskiy.sorting.reader.file.impl;
 
 import org.apache.commons.io.LineIterator;
 import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
-import ru.cft.drozdrtskiy.sorting.reader.FileElementReader;
+import ru.cft.drozdrtskiy.sorting.reader.file.FileElementReader;
 
 import java.io.IOException;
 import java.nio.file.*;

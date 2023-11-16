@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.reader.impl;
+package ru.cft.drozdrtskiy.sorting.reader.file.impl;
 
 import ru.cft.drozdrtskiy.sorting.element.file.impl.StringFileElement;
 

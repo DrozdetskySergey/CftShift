@@ -1,7 +1,7 @@
-package ru.cft.drozdrtskiy.sorting.reader.impl;
+package ru.cft.drozdrtskiy.sorting.reader.file.impl;
 
 import ru.cft.drozdrtskiy.sorting.ElementType;
-import ru.cft.drozdrtskiy.sorting.reader.FileElementReader;
+import ru.cft.drozdrtskiy.sorting.reader.file.FileElementReader;
 
 import java.io.IOException;
 import java.nio.file.Path;

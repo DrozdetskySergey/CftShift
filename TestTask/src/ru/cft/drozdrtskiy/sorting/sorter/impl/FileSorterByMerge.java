@@ -8,7 +8,7 @@ import ru.cft.drozdrtskiy.sorting.writer.FileElementWriter;
 import ru.cft.drozdrtskiy.sorting.writer.impl.*;
 import ru.cft.drozdrtskiy.sorting.supplier.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
-import ru.cft.drozdrtskiy.sorting.reader.impl.FileElementReaderFactory;
+import ru.cft.drozdrtskiy.sorting.reader.file.impl.FileElementReaderFactory;
 
 import static ru.cft.drozdrtskiy.sorting.util.MessagePrinter.print;
 
