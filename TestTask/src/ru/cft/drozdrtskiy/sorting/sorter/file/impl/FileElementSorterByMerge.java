@@ -55,18 +55,6 @@ public final class FileElementSorterByMerge implements FileElementSorter {
         }
     }
 
-    private void closeReaders(List<ElementReader<FileElement>> fileElementReaders) {
-        for (ElementReader<FileElement> reader : fileElementReaders) {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (Exception e) {
-                    print(e.getMessage());
-                }
-            }
-        }
-    }
-
     private void writeOutputFile(ElementSupplier<FileElement> elementSupplier) throws Exception {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile)) {
             FileElementWriter fileElementWriter = isUnsortedFileElementsIgnore ?
@@ -79,6 +67,18 @@ public final class FileElementSorterByMerge implements FileElementSorter {
             }
 
             fileElementWriter.close();
+        }
+    }
+
+    private void closeReaders(List<ElementReader<FileElement>> fileElementReaders) {
+        for (ElementReader<FileElement> reader : fileElementReaders) {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception e) {
+                    print(e.getMessage());
+                }
+            }
         }
     }
 }
