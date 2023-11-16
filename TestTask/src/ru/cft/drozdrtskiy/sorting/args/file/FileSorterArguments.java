@@ -1,9 +1,9 @@
-package ru.cft.drozdrtskiy.sorting.argument.file;
+package ru.cft.drozdrtskiy.sorting.args.file;
 
 import ru.cft.drozdrtskiy.sorting.DTO.FileSorterArgumentsDTO;
 import ru.cft.drozdrtskiy.sorting.ElementType;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
-import ru.cft.drozdrtskiy.sorting.argument.*;
+import ru.cft.drozdrtskiy.sorting.args.*;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static ru.cft.drozdrtskiy.sorting.argument.file.Key.*;
+import static ru.cft.drozdrtskiy.sorting.args.file.Key.*;
 
 public final class FileSorterArguments {
 

@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.argument.file;
+package ru.cft.drozdrtskiy.sorting.args.file;
 
 enum Key {
 

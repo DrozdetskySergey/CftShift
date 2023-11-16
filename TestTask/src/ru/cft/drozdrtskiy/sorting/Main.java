@@ -1,7 +1,7 @@
 package ru.cft.drozdrtskiy.sorting;
 
-import ru.cft.drozdrtskiy.sorting.argument.ArgsException;
-import ru.cft.drozdrtskiy.sorting.argument.file.FileSorterArguments;
+import ru.cft.drozdrtskiy.sorting.args.ArgsException;
+import ru.cft.drozdrtskiy.sorting.args.file.FileSorterArguments;
 import ru.cft.drozdrtskiy.sorting.sorter.Sorter;
 import ru.cft.drozdrtskiy.sorting.sorter.file.FileSorterByMerge;
 

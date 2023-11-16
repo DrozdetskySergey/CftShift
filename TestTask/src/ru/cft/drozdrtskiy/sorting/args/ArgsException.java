@@ -1,4 +1,4 @@
-package ru.cft.drozdrtskiy.sorting.argument;
+package ru.cft.drozdrtskiy.sorting.args;
 
 public final class ArgsException extends Exception {
 
