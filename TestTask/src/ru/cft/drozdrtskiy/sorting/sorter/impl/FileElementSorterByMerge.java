@@ -61,17 +61,15 @@ public final class FileElementSorterByMerge implements ElementSorter {
     }
 
     private void writeOutputFile(ElementSupplier elementSupplier) throws Exception {
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile)) {
-            ElementWriter elementWriter = isUnsortedFileElementsIgnore ?
-                    new StrictFileElementWriter(bufferedWriter, comparator) :
-                    new SimpleFileElementWriter(bufferedWriter);
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFile);
+             ElementWriter elementWriter = isUnsortedFileElementsIgnore ?
+                     new StrictFileElementWriter(bufferedWriter, comparator) :
+                     new SimpleFileElementWriter(bufferedWriter)) {
 
             for (Element element = elementSupplier.next(); element != null; ) {
                 elementWriter.write(element);
                 element = elementSupplier.next();
             }
-
-            elementWriter.close();
         }
     }
 
