@@ -3,10 +3,13 @@ package ru.cft.drozdrtskiy.sorting.args.file;
 import ru.cft.drozdrtskiy.sorting.DTO.FileElementSorterArgsDTO;
 import ru.cft.drozdrtskiy.sorting.ElementType;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
-import ru.cft.drozdrtskiy.sorting.args.*;
+import ru.cft.drozdrtskiy.sorting.args.ArgsException;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -15,8 +18,8 @@ import static ru.cft.drozdrtskiy.sorting.args.file.Key.*;
 
 public final class FileElementSorterArgs {
 
-    private List<String> keys;
     private List<Path> files;
+    private final Set<String> keys;
     private final SortDirection sortDirection;
     private final ElementType elementType;
     private final boolean isUnsortedFileElementsIgnore;
@@ -24,6 +27,7 @@ public final class FileElementSorterArgs {
     private final List<Path> inputFiles;
 
     public FileElementSorterArgs(String[] arguments) throws ArgsException {
+        keys = new HashSet<>();
         parseArguments(Arrays.asList(arguments));
 
         sortDirection = fetchSortDirection();
@@ -59,10 +63,6 @@ public final class FileElementSorterArgs {
                 .map(String::strip)
                 .collect(Collectors.toList());
 
-        keys = validArguments.stream()
-                .filter(s -> s.startsWith("-"))
-                .collect(Collectors.toList());
-
         try {
             files = validArguments.stream()
                     .filter(s -> !s.startsWith("-"))
@@ -70,6 +70,21 @@ public final class FileElementSorterArgs {
                     .collect(Collectors.toList());
         } catch (InvalidPathException e) {
             throw new ArgsException(String.format("Не допустимое имя файла. %s", e.getMessage()));
+        }
+
+        List<String> keyArguments = validArguments.stream()
+                .filter(s -> s.startsWith("-"))
+                .map(s -> s.replaceFirst("-", ""))
+                .collect(Collectors.toList());
+
+        for (String argument : keyArguments) {
+            if (argument.startsWith("-")) {
+                keys.add(argument);
+            } else {
+                for (char key : argument.toCharArray()) {
+                    keys.add(String.valueOf(key));
+                }
+            }
         }
     }
 

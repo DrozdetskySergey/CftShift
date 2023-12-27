@@ -6,8 +6,8 @@ enum Key {
     DESCENDING_ORDER("d"),
     STRING_TYPE("s"),
     INTEGER_TYPE("i"),
-    OVERWRITE_OUTPUT_FILE("w"),
-    IGNORE_UNSORTED("n");
+    OVERWRITE_OUTPUT_FILE("-OOF"),
+    IGNORE_UNSORTED("-IU");
 
     final String key;
 
