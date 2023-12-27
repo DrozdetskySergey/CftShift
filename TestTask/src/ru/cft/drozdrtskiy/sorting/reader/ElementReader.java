@@ -2,7 +2,7 @@ package ru.cft.drozdrtskiy.sorting.reader;
 
 import ru.cft.drozdrtskiy.sorting.element.Element;
 
-public interface ElementReader<E extends Element> extends AutoCloseable {
+public interface ElementReader extends AutoCloseable {
 
-    E next();
+    Element next();
 }

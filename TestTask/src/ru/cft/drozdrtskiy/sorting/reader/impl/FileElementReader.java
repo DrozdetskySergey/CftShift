@@ -1,19 +1,20 @@
-package ru.cft.drozdrtskiy.sorting.reader.file.impl;
+package ru.cft.drozdrtskiy.sorting.reader.impl;
 
 import org.apache.commons.io.LineIterator;
-import ru.cft.drozdrtskiy.sorting.element.file.FileElement;
-import ru.cft.drozdrtskiy.sorting.reader.file.FileElementReader;
+import ru.cft.drozdrtskiy.sorting.element.Element;
+import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-abstract class AbstractFileElementReader implements FileElementReader {
+abstract class FileElementReader implements ElementReader {
 
     protected final Path path;
     protected final LineIterator lineIterator;
     protected int invalidFileElementCount;
 
-    protected AbstractFileElementReader(Path path) throws IOException {
+    protected FileElementReader(Path path) throws IOException {
         this.path = path;
         lineIterator = new LineIterator(Files.newBufferedReader(this.path));
     }
@@ -23,7 +24,7 @@ abstract class AbstractFileElementReader implements FileElementReader {
     }
 
     @Override
-    public abstract FileElement next();
+    public abstract Element next();
 
     @Override
     public void close() throws Exception {

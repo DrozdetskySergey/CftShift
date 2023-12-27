@@ -3,17 +3,17 @@ package ru.cft.drozdrtskiy.sorting.sorter;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
 
-final class ElementExtractor<E extends Element> {
+final class ElementExtractor {
 
-    private final ElementReader<E> elementReader;
-    private E element;
+    private final ElementReader elementReader;
+    private Element element;
 
-    public ElementExtractor(ElementReader<E> elementReader) {
+    public ElementExtractor(ElementReader elementReader) {
         this.elementReader = elementReader;
         element = elementReader.next();
     }
 
-    public E getElement() {
+    public Element getElement() {
         return element;
     }
 
