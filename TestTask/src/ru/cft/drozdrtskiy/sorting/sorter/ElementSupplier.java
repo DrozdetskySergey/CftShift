@@ -20,12 +20,10 @@ public final class ElementSupplier {
 
     private void fillElementExtractors(List<ElementReader> elementReaders) {
         for (ElementReader reader : elementReaders) {
-            if (reader != null) {
-                ElementExtractor elementExtractor = new ElementExtractor(reader);
+            ElementExtractor elementExtractor = new ElementExtractor(reader);
 
-                if (elementExtractor.getElement() != null) {
-                    elementExtractors.add(elementExtractor);
-                }
+            if (elementExtractor.getElement() != null) {
+                elementExtractors.add(elementExtractor);
             }
         }
     }
