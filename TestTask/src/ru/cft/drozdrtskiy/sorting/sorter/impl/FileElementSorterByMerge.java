@@ -4,7 +4,8 @@ import ru.cft.drozdrtskiy.sorting.DTO.FileElementSorterArgsDTO;
 import ru.cft.drozdrtskiy.sorting.SortDirection;
 import ru.cft.drozdrtskiy.sorting.element.Element;
 import ru.cft.drozdrtskiy.sorting.reader.ElementReader;
-import ru.cft.drozdrtskiy.sorting.reader.impl.ElementReaderFactory;
+import ru.cft.drozdrtskiy.sorting.reader.ElementReaderFactory;
+import ru.cft.drozdrtskiy.sorting.reader.impl.ElementReaderFactoryController;
 import ru.cft.drozdrtskiy.sorting.sorter.ElementSorter;
 import ru.cft.drozdrtskiy.sorting.sorter.ElementSupplier;
 import ru.cft.drozdrtskiy.sorting.writer.ElementWriter;
@@ -33,7 +34,7 @@ public final class FileElementSorterByMerge implements ElementSorter {
         outputFile = DTO.outputFile;
         inputFiles = new ArrayList<>(DTO.inputFiles);
         isUnsortedFileElementsIgnore = DTO.isUnsortedFileElementsIgnore;
-        elementReaderFactory = ElementReaderFactory.from(DTO.elementType);
+        elementReaderFactory = ElementReaderFactoryController.build(DTO.elementType);
         comparator = DTO.sortDirection == SortDirection.DESC ?
                 Comparator.reverseOrder() :
                 Comparator.naturalOrder();
