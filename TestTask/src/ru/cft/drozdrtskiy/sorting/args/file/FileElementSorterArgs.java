@@ -127,7 +127,7 @@ public final class FileElementSorterArgs {
     }
 
     private void checkAvailabilityAllArguments() throws ArgsException {
-        if (sortDirection == null || elementType == null || outputFile == null || inputFiles.isEmpty()) {
+        if (elementType == null || outputFile == null || inputFiles.isEmpty()) {
             throw new ArgsException("Необходимые аргументы не указаны.");
         }
     }
